@@ -17,7 +17,7 @@
 
 .banner {
     background-image: url(./imagens/banner.png);
-    min-height: 100vh;
+    min-height: 80vh;
 }
 
 .banner h1, .banner p {
@@ -25,13 +25,9 @@
 }
 
 .funcionalidade {
-    position: relative;
+    min-height: 20vh;
 }
-.funcionalidade > .row:first-child {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-}
+
 
 .planos {
     background-color: #44AFB3;
@@ -53,20 +49,16 @@
     color: #f8f9fa;
 }
 
+footer {
+    background-color: #00232B;
+}
 
-@media screen and (max-width: 639px) {
+
+@media screen and (max-width: 576px) {
     .banner {
         background-size: 150px 150px;
-        min-height: 70vh;
+        
     }
 
-   .funcionalidade {
-       min-height: 30vh;
-   }
-
-   .planos {
-       background-size: 150px 150px;
-   }
-   /* #4BC1C6
-   #6c757d */
 }
+
