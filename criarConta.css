@@ -3,6 +3,12 @@ body {
     background-image: url(./imagens/banner.png);
 }
 
+
+.criar-conta {
+    width: 90%;
+    
+} 
+
 .btn-social {
     width: 45%;
 }
@@ -16,4 +22,39 @@ body {
     background-color: #44AFB3;
     border-color: #004759;
     color: #f8f9fa;
+}
+
+
+
+@media screen and (min-width: 576px) { 
+    .criar-conta {
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 768px) { 
+    .criar-conta {
+        width: 80%;
+    }
+    
+}
+
+@media screen and (min-width: 992px) { 
+    .criar-conta {
+        width: 70%;
+    }
+}
+
+@media screen and (min-width: 1200px) { 
+    .criar-conta {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      width: 45%;
+    }
+}
+
+@media screen and (min-width: 1400px) { 
+    .criar-conta {
+        width: 35%;
+    }
 }

@@ -25,6 +25,7 @@
     color: #00232B;
 }
 
+
 .funcionalidade {
     min-height: 20vh;
 }
@@ -55,11 +56,38 @@ footer {
 }
 
 
-@media screen and (max-width: 576px) {
+@media screen and (min-width: 576px) {
     .banner {
         background-size: 150px 150px;
         
     }
+    .descricao {
+        width: 95%;
+    }
+}
 
+@media screen and (min-width: 768px) { 
+   
+    .descricao {
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 992px) { 
+    .descricao {
+        width: 85%;
+    }
+}
+
+@media screen and (min-width: 1200px) { 
+    .descricao {
+        width: 75%;
+    }
+}
+
+@media screen and (min-width: 1400px) { 
+    .descricao {
+        width: 65%;
+    }
 }
 
