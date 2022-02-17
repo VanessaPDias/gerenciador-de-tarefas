@@ -1,11 +1,9 @@
-
 body {
     background-image: url(./imagens/banner.png);
 }
 
 
 .criar-conta {
-    
     width: 90%;
     
 } 
@@ -27,13 +25,13 @@ body {
     
 }
 
-.btn-cadastrar {
+.btn-redefinir {
     width: 50%;
     background-color: #004759;
     color: #f8f9fa;
 }
 
-.btn-cadastrar:hover {
+.btn-redefinir:hover {
     background-color: #44AFB3;
     border-color: #004759;
     color: #f8f9fa;

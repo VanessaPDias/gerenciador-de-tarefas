@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDoList - Criar Conta</title>
+    <title>ToDoList - Entrar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="criarConta.css">
+    <link rel="stylesheet" href="entrar.css">
 </head>
-
 <body class="vh-100">
     <main class="container-fluid h-100 d-flex justify-content-center text-center">
         <div class="criar-conta my-auto">
@@ -21,7 +19,7 @@
             </a>
             <div class="card mt-4">
                 <div class="card-body text-center">
-                    <h3 class="card-title pt-3">Criar uma conta</h3>
+                    <h1 class="card-title pt-3">Entrar</h1>
                     <p class="card-text">com</p>
                     <div class="pb-3">
                         <a href="#" class="btn-social btn btn-primary"><i class="bi bi-facebook"></i> Facebook</a>
@@ -30,10 +28,6 @@
                     <p class="card-text">ou</p>
 
                     <form class="formulario-dados mb-3 mx-auto">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="Maria" required>
-                            <label for="floatingInput">Nome completo</label>
-                        </div>
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control" id="floatingInput" placeholder="name@exemplo.com"
                                 required>
@@ -44,9 +38,14 @@
                                 required>
                             <label for="floatingPassword">Senha</label>
                         </div>
-                        <button class="btn-cadastrar btn" type="submit">Cadastrar</button>
+                        <div class="checkbox mb-3">
+                            <label>
+                              <input type="checkbox" value="remember-me"> Manter conectado
+                            </label>
+                          </div>
+                        <button class="btn-entrar btn" type="submit">Entrar</button>
                     </form>
-                    <a class="small" href="./entrar.html">Já tenho uma conta</a>
+                    <a class="small" href="./redefinirSenha.html">Esqueci minha senha</a>
                 </div>
             </div>
         </div>
@@ -56,5 +55,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
-
 </html>
