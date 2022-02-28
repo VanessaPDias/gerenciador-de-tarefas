@@ -13,46 +13,111 @@
     <script src="app.js"></script>
 </head>
 
-<body>
-    <div class="row vh-100">
-        <div class="col-3 d-flex flex-column">
-            <div class="p-3 bg-light">
-                <div class="dropdown">
-                    <a href="#" class="d-flex align-items-center justify-content-center link-dark text-decoration-none dropdown-toggle"
-                        id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2" id="avatar">
+<body >
+    <header class="p-3 border-bottom">
+        <div class="container-fluid d-flex justify-content-between align-items-center" >
+            <div class="d-flex align-items-end fw-bolder fs-5">
+                <a href="#" class="d-block d-sm-none link-dark text-decoration-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasToDo"  aria-controls="offcanvasToDo">
+                    <img src="./imagens/iconeLista.png" class="me-2" alt="" width="40" height="40">
+                    <span>ToDoList</span>
+                </a>
+                <a href="#" class="link-dark text-decoration-none d-none d-sm-block">
+                    <img src="./imagens/iconeLista.png" class="me-2" alt="" width="40" height="40">
+                    <span>ToDoList</span>
+                </a>
+            </div>
+            
+            <div class="d-flex align-items-center justify-content-end">
+                <div class="flex-shrink-0 dropdown me-3">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" class="rounded-circle">
                         <strong id="nomeUsuario">mdo</strong>
                     </a>
                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                        <li><a class="dropdown-item" href="#">Configurações</a></li>
-                        <li><a class="dropdown-item" id="btnSair" href="#">Sair</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" id="#btnSair"><i class="bi bi-power me-2"></i>Sair</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="p-3 border-bottom">
-                <form class="w-100 me-3">
-                    <input type="search" class="form-control" placeholder="Procurar" aria-label="Search">
-                  </form>
-            </div>
-            <div class="my-3">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active border-0" aria-current="true">
-                      The current link item
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action border-0">A second link item</a>
-                    <a href="#" class="list-group-item list-group-item-action border-0">A third link item</a>
-                    <a href="#" class="list-group-item list-group-item-action border-0">A fourth link item</a>
-                  </div>
-            </div>
-            <div class="bg-light">
-                <a href="#" type="button" class="d-flex align-items-center justify-content-center link-dark text-decoration-none">
-                    <i class="bi bi-plus"></i>
-                    <span class="">Criar Lista</span>
-                </a>
-            </div>
         </div>
-        <div class="col-9 bg-info">gffdfghfg</div>
-    </div>
+    </header>
+    <main>
+        <div class="container-fluid align-items-center" >
+            <div class="row vh-100">
+                <div class="d-block d-sm-none offcanvas offcanvas-start"  id="offcanvasToDo" aria-labelledby="offcanvasToDoLabel">
+                    <div class="d-flex flex-column ">
+                        <div class="d-flex justify-content-end py-3">
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="py-3 border-bottom">
+                            <form class="w-100">
+                                <input type="search" class="form-control" placeholder="Procurar" aria-label="Search">
+                            </form>
+                        </div>
+                        <div class="my-3">
+                            <div class="list-group ">
+                                <a href="#" class="list-group-item list-group-item-action active border-0">Sem data</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Hoje</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Semana</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Mês</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Com Prioridade</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Recorrentes</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Vencidas</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Todas</a>
+                            </div>
+                        </div>
+                        <div class="bg-light">
+                            <a href="#" type="button"
+                                class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none" style="height: 50px;">
+                                <i class="bi bi-plus"></i>
+                                <span class="">Criar Lista</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 d-none d-sm-block" >
+                    <div class="d-flex flex-column ">
+                        <div class="py-3 border-bottom">
+                            <form class="w-100">
+                                <input type="search" class="form-control" placeholder="Procurar" aria-label="Search">
+                            </form>
+                        </div>
+                        <div class="my-3">
+                            <div class="list-group ">
+                                <a href="#" class="list-group-item list-group-item-action active border-0">Sem data</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Hoje</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Semana</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Mês</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Com Prioridade</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Recorrentes</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Vencidas</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0">Todas</a>
+                            </div>
+                        </div>
+                        <div class="bg-light">
+                            <a href="#" type="button"
+                                class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none" style="height: 50px;">
+                                <i class="bi bi-plus"></i>
+                                <span class="">Criar Lista</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col" style="background-image: url(./imagens/bannerBranco.png); background-size: 150px 150px;"></div>
+            </div>
+            
+        </div>
+
+
+        
+    </main>
 
 
 

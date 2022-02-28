@@ -12,11 +12,15 @@ function iniciar() {
     const avatar = document.querySelector("#avatar")
     const nomeUsuario = document.querySelector("#nomeUsuario");
 
-
-    nomeUsuario.innerHTML = usuario.nome;
+    const nomeCompleto = usuario.nome;
+    const primeiroNome = nomeCompleto.split(" ", 1);
+    
+    nomeUsuario.innerHTML = primeiroNome;
 
 
 }
+
+
 
 
 
