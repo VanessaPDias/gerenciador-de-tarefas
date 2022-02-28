@@ -17,19 +17,17 @@ function iniciar() {
     
     nomeUsuario.innerHTML = primeiroNome;
 
+    document.querySelector("#btnSair").onclick = sair;
+}
 
+
+function sair() {
+    localStorage.removeItem("logado");
+    window.location.href = "/index.html"
 }
 
 
 
-
-
-
-    // const btnSair = document.querySelector("#btnSair");
-    // btnSair.onclick = function () {
-    //     localStorage.removeItem("logado");
-    //     window.location.href = "/index.html"
-    // }
-
+   
 
 
