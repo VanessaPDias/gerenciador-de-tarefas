@@ -13,11 +13,12 @@
     <script src="app.js"></script>
 </head>
 
-<body >
+<body>
     <header class="p-3 border-bottom">
-        <div class="container-fluid d-flex justify-content-between align-items-center" >
+        <div class="container-fluid d-flex justify-content-between align-items-center" style="color: #212529;">
             <div class=" fw-bolder fs-5">
-                <a href="#" class="d-block d-sm-none link-dark text-decoration-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvasToDo"  aria-controls="offcanvasToDo">
+                <a href="#" class="d-block d-sm-none link-dark text-decoration-none" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasToDo" aria-controls="offcanvasToDo">
                     <i class="bi bi-list fs-1 me-2"></i>
                     <span>ToDoList</span>
                 </a>
@@ -26,13 +27,13 @@
                     <span>ToDoList</span>
                 </a>
             </div>
-            
+
             <div class="d-flex align-items-center justify-content-end">
                 <div class="flex-shrink-0 dropdown me-3">
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" class="rounded-circle">
-                        <strong id="nomeUsuario">mdo</strong>
+                        <img src="./imagens/user.png" alt="" width="40" height="40" class="rounded-circle">
+                        <strong id="nomeUsuario"></strong>
                     </a>
                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
                         <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
@@ -47,12 +48,15 @@
         </div>
     </header>
     <main>
-        <div class="container-fluid align-items-center" >
+        <div class="container-fluid align-items-center">
             <div class="row vh-100">
-                <div class="d-block d-sm-none offcanvas offcanvas-start"  id="offcanvasToDo" aria-labelledby="offcanvasToDoLabel">
+                <div class="d-block d-sm-none offcanvas offcanvas-start" id="offcanvasToDo"
+                    aria-labelledby="offcanvasToDoLabel">
                     <div class="d-flex flex-column ">
-                        <div class="d-flex justify-content-end py-3">
-                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        <div class="d-flex justify-content-between py-3 ">
+                            <a href="#" class="link-dark text-decoration-none fw-bolder fs-5">ToDoList</a>
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
                         </div>
                         <div class="py-3 border-bottom">
                             <form class="w-100">
@@ -61,19 +65,28 @@
                         </div>
                         <div class="my-3">
                             <div class="list-group ">
-                                <a href="#" class="list-group-item list-group-item-action active border-0">Sem data</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Hoje</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Semana</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Mês</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Com Prioridade</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Recorrentes</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Vencidas</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Todas</a>
+                                <a href="#" class="list-group-item list-group-item-action active border-0"><i
+                                        class="bi bi-calendar me-2"></i>Sem data</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-calendar-event me-2"></i>Hoje</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-calendar-week me-2"></i>Semana</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-calendar3 me-2"></i>Mês</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-star me-2"></i>Com Prioridade</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-arrow-repeat me-2"></i>Recorrentes</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-hourglass-bottom me-2"></i>Vencidas</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-list-ul me-2"></i>Todas</a>
                             </div>
                         </div>
                         <div class="bg-light">
                             <a href="#" type="button"
-                                class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none" style="height: 50px;">
+                                class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none"
+                                style="height: 50px;">
                                 <i class="bi bi-plus"></i>
                                 <span class="">Criar Lista</span>
                             </a>
@@ -81,7 +94,7 @@
                     </div>
                 </div>
 
-                <div class="col-3 d-none d-sm-block" >
+                <div class="col-3 d-none d-sm-block">
                     <div class="d-flex flex-column ">
                         <div class="py-3 border-bottom">
                             <form class="w-100">
@@ -90,19 +103,28 @@
                         </div>
                         <div class="my-3">
                             <div class="list-group ">
-                                <a href="#" class="list-group-item list-group-item-action active border-0">Sem data</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Hoje</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Semana</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Mês</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Com Prioridade</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Recorrentes</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Vencidas</a>
-                                <a href="#" class="list-group-item list-group-item-action border-0">Todas</a>
+                                <a href="#" class="list-group-item list-group-item-action active border-0"><i
+                                        class="bi bi-calendar me-2"></i>Sem data</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-calendar-event me-2"></i>Hoje</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-calendar-week me-2"></i>Semana</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-calendar3 me-2"></i>Mês</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-star me-2"></i>Com Prioridade</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-arrow-repeat me-2"></i>Recorrentes</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-hourglass-bottom me-2"></i>Vencidas</a>
+                                <a href="#" class="list-group-item list-group-item-action border-0"><i
+                                        class="bi bi-list-ul me-2"></i>Todas</a>
                             </div>
                         </div>
                         <div class="bg-light">
                             <a href="#" type="button"
-                                class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none" style="height: 50px;">
+                                class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none"
+                                style="height: 50px;">
                                 <i class="bi bi-plus"></i>
                                 <span class="">Criar Lista</span>
                             </a>
@@ -110,13 +132,20 @@
                     </div>
                 </div>
 
-                <div class="col" style="background-image: url(./imagens/bannerBranco.png); background-size: 150px 150px;"></div>
+                <div class="col" style="background-image: url(./imagens/bannerBranco.png); background-size: 150px 150px;">
+                    <div class="input-group my-3">
+                        <input type="text" class="form-control fw-normal" placeholder="Digite uma tarefa" aria-label="" aria-describedby="">
+                        <a href="">
+                            <span class="input-group-text" id="inputGroup-sizing-default" style="background-color: #004759; color: #f8f9fa;"><i class="bi bi-plus-lg"></i></span>
+                        </a>
+                    </div>
+                </div>
             </div>
-            
+
         </div>
 
 
-        
+
     </main>
 
 
