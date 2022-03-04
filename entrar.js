@@ -30,7 +30,7 @@ function validarUsuario(evento) {
        const usuario = JSON.parse(localStorage.getItem(inputEmail));
        
        if(inputSenha === usuario.senha) {
-           localStorage.setItem("logado", JSON.stringify({ logado: true, nome: usuario.nome }));
+           localStorage.setItem("logado", JSON.stringify({ logado: true, nome: usuario.nome, email: usuario.email }));
            return true;
 
        } else {
