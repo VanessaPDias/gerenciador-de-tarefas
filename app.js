@@ -13,14 +13,14 @@ window.onload = iniciar;
 
 function iniciar() {
     imprimirNomeDoUsuario();
-    recuperarListaDeTarefas();
-    adicionarEventoCheckBox()
-    
+    imprimirListaDeTarefas();
+    adicionarEventoCheckBox();
+
     document.querySelector("#btn-sair").onclick = sair;
-    
+
     document.querySelector("#criar-tarefa").onclick = criarTarefa;
-    
-    
+
+
 }
 
 function imprimirNomeDoUsuario() {
@@ -33,36 +33,53 @@ function imprimirNomeDoUsuario() {
 }
 
 
-function recuperarListaDeTarefas() {
-    const listaEncontrada = JSON.parse(localStorage.getItem(usuario.email + "_tarefas"));
 
-    if (listaEncontrada !== null) {
-        imprimirListaDeTarefas()
-    }
+function buscarTarefasDoUsuario(usuario) {
+    const chave = usuario.email + "_tarefas";
+    const listaDeTarefas = JSON.parse(localStorage.getItem(chave));
+    return listaDeTarefas;
+}
+
+function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
+    const chave = usuario.email + "_tarefas";
+    localStorage.setItem(chave, JSON.stringify(listaDeTarefas));
 }
 
 
 function imprimirListaDeTarefas() {
-    const chave = usuario.email + "_tarefas";
-    const listaDeTarefas = JSON.parse(localStorage.getItem(chave));
-    
-    
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+
+    if(listaDeTarefas == null) {
+        return;
+    }
+
+    document.querySelector("#lista-de-tarefas").innerHTML = "";
+
     listaDeTarefas.tarefas.forEach(element => {
-        document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML + 
-        `<li class="tarefa list-group-item mb-2 d-flex">
-        <input class="form-check-input me-2 btn-marcar" type="checkbox" value="" >
-        <a href="#" class="flex-grow-1 link-dark text-decoration-none">${element}</a>
-        <a href="" class="" id="btn-prioridade"><i class="bi bi-star link-dark"></i></a>
+        let checkbox = "";
+        let descricaoDaTarefa = "";
+
+        if(element.concluida == true){
+            checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox" checked = "true" data-tarefa=${element.id} value="" >`;
+            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark tarefa-concluida">${element.descricao}</a>`;
+        } else if(element.concluida == false) {
+            checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.id} value="" >`;
+            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark text-decoration-none">${element.descricao}</a>`;
+        }
+        document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML +
+            `<li class="tarefa list-group-item mb-2 d-flex">
+            ${checkbox + descricaoDaTarefa}
+            <a href="" class="" id="btn-prioridade"><i class="bi bi-star link-dark"></i></a>
         </li>`;
-        adicionarEventoCheckBox()
     });
-    
+    adicionarEventoCheckBox();
+
 }
 
 function adicionarEventoCheckBox() {
     const listaCheckBox = document.querySelectorAll(".btn-marcar");
     listaCheckBox.forEach(element => {
-        element.onclick = concluirTarefa;
+        element.onclick = marcarTarefa;
     });
 }
 
@@ -74,47 +91,65 @@ function sair() {
 
 function criarTarefa() {
     const inputTarefa = document.querySelector("#input-tarefa").value;
-    const chave = usuario.email + "_tarefas";
+    const id = Date.now();
 
-    if (localStorage.getItem(chave) == null) {
+    if (buscarTarefasDoUsuario(usuario) == null) {
         const listaDeTarefas = {
             tarefas: []
         };
 
-        listaDeTarefas.tarefas.push(inputTarefa);
-
-        localStorage.setItem(chave, JSON.stringify(listaDeTarefas));
-
-        imprimirListaDeTarefas();
+        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false });
+        salvarTarefasDoUsuario(usuario, listaDeTarefas);
 
     } else {
-        const listaDeTarefas = JSON.parse(localStorage.getItem(chave));
-        listaDeTarefas.tarefas.push(inputTarefa);
-        localStorage.setItem(chave, JSON.stringify(listaDeTarefas));
-        document.querySelector("#lista-de-tarefas").innerHTML = ""
-        imprimirListaDeTarefas();
+        const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false });
+
+        salvarTarefasDoUsuario(usuario, listaDeTarefas);
     }
+    imprimirListaDeTarefas();
 }
 
-// function listarTarefas(chave) {
-//     const listaDeTarefas = JSON.parse(localStorage.getItem(chave));
 
-//     listaDeTarefas.tarefas.forEach(element => {
-//         console.log(element)
+function marcarTarefa(evento) {
 
-//         document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML + `<li class="tarefa list-group-item">${element}</li>`;
-//     });
+    if (evento.target.checked == true) {
+        marcarConcluida(evento);
+        
 
-//}
-
-function concluirTarefa(evento) {
-    if(evento.target.checked == true){
-        evento.target.parentElement.classList.add("tarefa-concluida");
     } else {
-        evento.target.parentElement.classList.remove("tarefa-concluida");
+        marcarNaoConcuida(evento);
+
     }
+
+    imprimirListaDeTarefas()
 }
 
+function marcarConcluida(evento) {
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+
+    listaDeTarefas.tarefas.forEach(element => {
+        if(element.id == evento.target.dataset.tarefa) {
+            element.concluida = true;
+        }
+    })
+
+    salvarTarefasDoUsuario(usuario, listaDeTarefas);
+   
+}
+
+function marcarNaoConcuida(evento) {
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+
+    listaDeTarefas.tarefas.forEach(element => {
+        if(element.id == evento.target.dataset.tarefa) {
+            element.concluida = false;
+        }
+    })
+
+    salvarTarefasDoUsuario(usuario, listaDeTarefas);
+    
+}
 
 
 
