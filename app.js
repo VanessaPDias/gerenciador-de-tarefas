@@ -14,13 +14,17 @@ window.onload = iniciar;
 function iniciar() {
     imprimirNomeDoUsuario();
     imprimirListaDeTarefas();
-    adicionarEventoCheckBox();
 
     document.querySelector("#btn-sair").onclick = sair;
 
     document.querySelector("#criar-tarefa").onclick = criarTarefa;
 
 
+}
+
+function sair() {
+    localStorage.removeItem("logado");
+    window.location.href = "/index.html"
 }
 
 function imprimirNomeDoUsuario() {
@@ -69,10 +73,12 @@ function imprimirListaDeTarefas() {
         document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML +
             `<li class="tarefa list-group-item mb-2 d-flex">
             ${checkbox + descricaoDaTarefa}
-            <a href="" class="" id="btn-prioridade"><i class="bi bi-star link-dark"></i></a>
+            <a href="#" class="btn-prioridade"><i class="bi bi-star link-dark me-3" ></i></a>
+            <a href="#" class="btn-excluir"><i class="bi bi-trash link-dark" data-tarefa=${element.id}></i></a>
         </li>`;
     });
     adicionarEventoCheckBox();
+    adicionarEventoExcluir();
 
 }
 
@@ -83,10 +89,30 @@ function adicionarEventoCheckBox() {
     });
 }
 
-function sair() {
-    localStorage.removeItem("logado");
-    window.location.href = "/index.html"
+function adicionarEventoExcluir() {
+    const listaBtnExcluir = document.querySelectorAll(".btn-excluir");
+    listaBtnExcluir.forEach(element => {
+        element.onclick = excluirTarefa;
+    });
 }
+
+function excluirTarefa(evento) {
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+    let indice;
+
+    listaDeTarefas.tarefas.forEach((element, i) => {
+        
+        if(element.id == evento.target.dataset.tarefa) {
+           indice = i;
+        }
+    });
+
+    listaDeTarefas.tarefas.splice(indice, 1);
+
+   salvarTarefasDoUsuario(usuario, listaDeTarefas);
+   imprimirListaDeTarefas();
+}
+
 
 
 function criarTarefa() {
