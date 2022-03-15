@@ -49,6 +49,28 @@ function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
     localStorage.setItem(chave, JSON.stringify(listaDeTarefas));
 }
 
+function criarTarefa() {
+    const inputTarefa = document.querySelector("#input-tarefa").value;
+    const id = Date.now();
+    document.querySelector("#input-tarefa").value = "";
+
+    if (buscarTarefasDoUsuario(usuario) == null) {
+        const listaDeTarefas = {
+            tarefas: []
+        };
+
+        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
+        salvarTarefasDoUsuario(usuario, listaDeTarefas);
+
+    } else {
+        const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
+
+        salvarTarefasDoUsuario(usuario, listaDeTarefas);
+    }
+    imprimirListaDeTarefas();
+}
+
 
 function imprimirListaDeTarefas() {
     const listaDeTarefas = buscarTarefasDoUsuario(usuario);
@@ -57,11 +79,25 @@ function imprimirListaDeTarefas() {
         return;
     }
 
+    listaDeTarefas.tarefas.sort(function (a, b) {
+        if(a.prioridade == true && b.prioridade == false){
+            return -1;
+        }
+        
+        if(a.prioridade == b.prioridade){
+            if(a.id < b.id){
+                return -1;
+            }
+        }
+        
+    });
+
     document.querySelector("#lista-de-tarefas").innerHTML = "";
 
     listaDeTarefas.tarefas.forEach(element => {
         let checkbox = "";
         let descricaoDaTarefa = "";
+        let prioridade = "";
 
         if(element.concluida == true){
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox" checked = "true" data-tarefa=${element.id} value="" >`;
@@ -70,15 +106,23 @@ function imprimirListaDeTarefas() {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.id} value="" >`;
             descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark text-decoration-none">${element.descricao}</a>`;
         }
+
+        if(element.prioridade == true) {
+            prioridade = `<i class="bi bi-star-fill link-dark me-3 icone-prioridade" data-tarefa=${element.id}></i>`;
+        } else if(element.prioridade == false) {
+            prioridade = `<i class="bi bi-star link-dark me-3" data-tarefa=${element.id}></i>`
+        }
+
         document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML +
             `<li class="tarefa list-group-item mb-2 d-flex">
             ${checkbox + descricaoDaTarefa}
-            <a href="#" class="btn-prioridade"><i class="bi bi-star link-dark me-3" ></i></a>
+            <a href="#" class="btn-prioridade">${prioridade}</a>
             <a href="#" class="btn-excluir"><i class="bi bi-trash link-dark" data-tarefa=${element.id}></i></a>
         </li>`;
     });
     adicionarEventoCheckBox();
     adicionarEventoExcluir();
+    adicionarEventoPrioridade();
 
 }
 
@@ -88,6 +132,28 @@ function adicionarEventoCheckBox() {
         element.onclick = marcarTarefa;
     });
 }
+
+function marcarTarefa(evento) {
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+    let tarefaClicada;
+
+    listaDeTarefas.tarefas.forEach(element => {
+        if(element.id == evento.target.dataset.tarefa) {
+            tarefaClicada = element;
+        }
+    });
+
+    if(tarefaClicada.concluida == false) {
+        tarefaClicada.concluida = true;
+    }else if(tarefaClicada.concluida == true){
+        tarefaClicada.concluida = false;
+    }
+
+    salvarTarefasDoUsuario(usuario, listaDeTarefas);
+
+    imprimirListaDeTarefas()
+}
+
 
 function adicionarEventoExcluir() {
     const listaBtnExcluir = document.querySelectorAll(".btn-excluir");
@@ -113,69 +179,37 @@ function excluirTarefa(evento) {
    imprimirListaDeTarefas();
 }
 
+function adicionarEventoPrioridade() {
+    const listaBtnPrioridade = document.querySelectorAll(".btn-prioridade");
+    listaBtnPrioridade.forEach(element => {
+        element.onclick = marcarPrioridade;
+    });
+}
 
+function marcarPrioridade(evento) {
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+    let tarefaClicada;
 
-function criarTarefa() {
-    const inputTarefa = document.querySelector("#input-tarefa").value;
-    const id = Date.now();
+    listaDeTarefas.tarefas.forEach(element => {
+        if(element.id == evento.target.dataset.tarefa) {
+            tarefaClicada = element 
+        }
+    });
 
-    if (buscarTarefasDoUsuario(usuario) == null) {
-        const listaDeTarefas = {
-            tarefas: []
-        };
-
-        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false });
-        salvarTarefasDoUsuario(usuario, listaDeTarefas);
-
-    } else {
-        const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false });
-
-        salvarTarefasDoUsuario(usuario, listaDeTarefas);
+    if(tarefaClicada.prioridade == false) {
+        tarefaClicada.prioridade = true;
+    }else if(tarefaClicada.prioridade == true) {
+        tarefaClicada.prioridade = false;
     }
+    salvarTarefasDoUsuario(usuario, listaDeTarefas);
     imprimirListaDeTarefas();
 }
 
 
-function marcarTarefa(evento) {
 
-    if (evento.target.checked == true) {
-        marcarConcluida(evento);
-        
 
-    } else {
-        marcarNaoConcuida(evento);
 
-    }
 
-    imprimirListaDeTarefas()
-}
-
-function marcarConcluida(evento) {
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-
-    listaDeTarefas.tarefas.forEach(element => {
-        if(element.id == evento.target.dataset.tarefa) {
-            element.concluida = true;
-        }
-    })
-
-    salvarTarefasDoUsuario(usuario, listaDeTarefas);
-   
-}
-
-function marcarNaoConcuida(evento) {
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-
-    listaDeTarefas.tarefas.forEach(element => {
-        if(element.id == evento.target.dataset.tarefa) {
-            element.concluida = false;
-        }
-    })
-
-    salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    
-}
 
 
 

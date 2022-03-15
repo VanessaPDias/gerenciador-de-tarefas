@@ -1,3 +1,13 @@
+
+#btn-criar-tarefa{
+    background-color: #0d6efd; 
+    color: #f8f9fa;
+}
+
 .tarefa-concluida {
     text-decoration: line-through;
+}
+
+.icone-prioridade {
+    color: #0d6efd;
 }
