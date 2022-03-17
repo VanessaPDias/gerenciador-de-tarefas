@@ -19,7 +19,9 @@ function iniciar() {
 
     document.querySelector("#criar-tarefa").onclick = criarTarefa;
 
+    document.querySelector("#modal-editar-tarefa").addEventListener("show.bs.modal", editarTarefa);
 
+    document.querySelector("#btn-editar-salvar").onclick = salvarTarefaEditada;
 }
 
 function sair() {
@@ -101,10 +103,10 @@ function imprimirListaDeTarefas() {
 
         if(element.concluida == true){
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox" checked = "true" data-tarefa=${element.id} value="" >`;
-            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark tarefa-concluida">${element.descricao}</a>`;
+            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark tarefa-concluida" data-tarefa=${element.id}>${element.descricao}</a>`;
         } else if(element.concluida == false) {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.id} value="" >`;
-            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark text-decoration-none">${element.descricao}</a>`;
+            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark text-decoration-none" data-tarefa=${element.id} data-bs-toggle="modal" data-bs-target="#modal-editar-tarefa">${element.descricao}</a>`;
         }
 
         if(element.prioridade == true) {
@@ -203,6 +205,40 @@ function marcarPrioridade(evento) {
     }
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
     imprimirListaDeTarefas();
+}
+
+function editarTarefa(evento) {
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+    let tarefaClicada;
+
+    listaDeTarefas.tarefas.forEach(element => {
+        if(element.id == evento.relatedTarget.dataset.tarefa) {
+            tarefaClicada = element 
+        }
+    });
+
+    document.querySelector("#input-editar-tarefa").value = tarefaClicada.descricao;
+    document.querySelector("#id-tarefa").value = tarefaClicada.id;
+}
+
+function salvarTarefaEditada() {
+    const novaDescricaoTarefa = document.querySelector("#input-editar-tarefa").value;
+    const idTarefa = document.querySelector("#id-tarefa").value;
+
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+    let tarefaClicada;
+
+    listaDeTarefas.tarefas.forEach(element => {
+        if(element.id == idTarefa) {
+            tarefaClicada = element 
+        }
+    });
+
+    tarefaClicada.descricao = novaDescricaoTarefa;
+
+    salvarTarefasDoUsuario(usuario, listaDeTarefas);
+    imprimirListaDeTarefas();
+
 }
 
 
