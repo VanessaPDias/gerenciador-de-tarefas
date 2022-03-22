@@ -9,12 +9,20 @@ function recuperarUsuarioLogado() {
     return usuarioEncontrado;
 }
 
+if(window.location.hash == "") {
+    window.location.hash = "todas"
+}
+
 window.onload = iniciar;
 
 function iniciar() {
     imprimirNomeDoUsuario();
-    imprimirListaDeTarefas(buscarTarefasDoUsuario(usuario));
-    adicionarEventoListarPrioridades()
+    listarTarefasFiltradas(buscarTarefasDoUsuario(usuario));
+
+    const itensDoMenu = document.querySelectorAll(".item-menu");
+    itensDoMenu.forEach(element => {
+        element.onclick = atualizarLink;
+    })
 
     document.querySelector("#btn-sair").onclick = sair;
 
@@ -66,8 +74,9 @@ function criarTarefa() {
             tarefas: []
         };
 
-         novaListaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
-        salvarTarefasDoUsuario(usuario,  novaListaDeTarefas);
+        novaListaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
+        tarefasEncontradas = novaListaDeTarefas;
+        salvarTarefasDoUsuario(usuario,  tarefasEncontradas);
 
     } else {
         
@@ -82,7 +91,7 @@ function criarTarefa() {
 
 
 function imprimirListaDeTarefas(listaDeTarefas) {
-   
+
     if (listaDeTarefas == null) {
         return;
     }
@@ -159,7 +168,7 @@ function marcarTarefa(evento) {
 
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
 
-    imprimirListaDeTarefas(listaDeTarefas);
+    listarTarefasFiltradas();
 }
 
 
@@ -184,7 +193,7 @@ function excluirTarefa(evento) {
     listaDeTarefas.tarefas.splice(indice, 1);
 
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    imprimirListaDeTarefas(listaDeTarefas);
+    listarTarefasFiltradas();
 }
 
 function adicionarEventoPrioridade() {
@@ -210,7 +219,7 @@ function marcarPrioridade(evento) {
         tarefaClicada.prioridade = false;
     }
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    imprimirListaDeTarefas(listaDeTarefas);
+    listarTarefasFiltradas();
 }
 
 function editarTarefa(evento) {
@@ -243,37 +252,67 @@ function salvarTarefaEditada() {
     tarefaClicada.descricao = novaDescricaoTarefa;
 
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    imprimirListaDeTarefas(listaDeTarefas);
+    listarTarefasFiltradas();
 
 }
 
-function adicionarEventoListarPrioridades() {
-    const btnListarPrioridade = document.querySelectorAll(".btn-listar-prioridade");
-    btnListarPrioridade.forEach(element => {
-        element.onclick = listarPrioridades;
-    })
+function atualizarLink(evento) {
+    const hrefElemento = evento.target.hash;
+    window.location.hash = hrefElemento;
+    atualizarMenu();
+}
+
+function atualizarMenu() {
+    const itensDoMenu = document.querySelectorAll(".item-menu");
+    itensDoMenu.forEach(element => {
+        element.classList.remove("active");
+    });
+
+    const hashDaPagina = window.location.hash;
+    const elementosHrefEncontrados = document.querySelectorAll(`*[href='${hashDaPagina}']`);
+        elementosHrefEncontrados.forEach(element => {
+            element.classList.add("active");
+   });
+
+   listarTarefasFiltradas();
 }
 
 
-function listarPrioridades() {
-
+function listarTarefasFiltradas() {
+    const hashDaPagina = window.location.hash;
     const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-    let tarefasComPrioridade = {
+    let tarefasFiltradas = {
         tarefas: []
     }
 
-    listaDeTarefas.tarefas.forEach(element => {
-        if (element.prioridade == true) {
-            tarefasComPrioridade.tarefas.push(element);
-        }
-    });
-    imprimirListaDeTarefas(tarefasComPrioridade);
+    if(hashDaPagina == "#todas") {
+        listaDeTarefas.tarefas.forEach(element => {
+            tarefasFiltradas.tarefas.push(element);
+        });
+    } else if(hashDaPagina == "#a-fazer") {
+        listaDeTarefas.tarefas.forEach(element => {
+            if(element.concluida == false) {
+                tarefasFiltradas.tarefas.push(element);
+            }
+        });
+    } else if(hashDaPagina == "#concluidas") {
+        listaDeTarefas.tarefas.forEach(element => {
+            if(element.concluida == true) {
+                tarefasFiltradas.tarefas.push(element);
+            }
+        });
+    } else if(hashDaPagina == "#prioridades") {
+        listaDeTarefas.tarefas.forEach(element => {
+            if(element.prioridade == true) {
+                tarefasFiltradas.tarefas.push(element);
+            }
+        });
+    } else {
+        tarefasFiltradas = listaDeTarefas;
+    }
+    
+    imprimirListaDeTarefas(tarefasFiltradas);
 }
-
-
-
-
-
 
 
 
