@@ -13,29 +13,30 @@ if(window.location.hash == "") {
     window.location.hash = "todas"
 }
 
-window.onload = iniciar;
+window.onload = aoCarregarPagina;
 
-function iniciar() {
+function aoCarregarPagina() {
     imprimirNomeDoUsuario();
-    listarTarefasFiltradas(buscarTarefasDoUsuario(usuario));
+    atualizarMenu();
+    listarTarefasFiltradas();
 
     const itensDoMenu = document.querySelectorAll(".item-menu");
     itensDoMenu.forEach(element => {
-        element.onclick = atualizarLink;
+        element.onclick = aoClicarNosItensDoMenu;
     })
 
-    document.querySelector("#btn-sair").onclick = sair;
+    document.querySelector("#btn-sair").onclick = aoClicarNoBotaoSair;
 
-    document.querySelector("#criar-tarefa").onclick = criarTarefa;
+    document.querySelector("#criar-tarefa").onclick = aoClicarNoBotaoCriarTarefa;
 
-    document.querySelector("#modal-editar-tarefa").addEventListener("show.bs.modal", editarTarefa);
+    document.querySelector("#modal-editar-tarefa").addEventListener("show.bs.modal", aoClicarNaTarefa);
 
-    document.querySelector("#btn-editar-salvar").onclick = salvarTarefaEditada;
+    document.querySelector("#btn-editar-salvar").onclick = aoClicarNoBotaoSalvar;
 
 
 }
 
-function sair() {
+function aoClicarNoBotaoSair() {
     localStorage.removeItem("logado");
     window.location.href = "/index.html"
 }
@@ -62,7 +63,7 @@ function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
     localStorage.setItem(chave, JSON.stringify(listaDeTarefas));
 }
 
-function criarTarefa() {
+function aoClicarNoBotaoCriarTarefa(evento) {
     const inputTarefa = document.querySelector("#input-tarefa").value;
     const id = Date.now();
     let tarefasEncontradas = buscarTarefasDoUsuario(usuario);
@@ -118,10 +119,10 @@ function imprimirListaDeTarefas(listaDeTarefas) {
 
         if (element.concluida == true) {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox" checked = "true" data-tarefa=${element.id} value="" >`;
-            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark tarefa-concluida" data-tarefa=${element.id}>${element.descricao}</a>`;
+            descricaoDaTarefa = `<a class="flex-grow-1 link-dark tarefa-concluida" data-tarefa=${element.id}>${element.descricao}</a>`;
         } else if (element.concluida == false) {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.id} value="" >`;
-            descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark text-decoration-none" data-tarefa=${element.id} data-bs-toggle="modal" data-bs-target="#modal-editar-tarefa">${element.descricao}</a>`;
+            descricaoDaTarefa = `<a class="flex-grow-1 link-dark text-decoration-none" data-tarefa=${element.id} data-bs-toggle="modal" data-bs-target="#modal-editar-tarefa">${element.descricao}</a>`;
         }
 
         if (element.prioridade == true) {
@@ -133,8 +134,8 @@ function imprimirListaDeTarefas(listaDeTarefas) {
         document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML +
             `<li class="tarefa list-group-item mb-2 d-flex">
             ${checkbox + descricaoDaTarefa}
-            <a href="#" class="btn-prioridade">${prioridade}</a>
-            <a href="#" class="btn-excluir"><i class="bi bi-trash link-dark" data-tarefa=${element.id}></i></a>
+            <a class="btn-prioridade">${prioridade}</a>
+            <a class="btn-excluir"><i class="bi bi-trash link-dark" data-tarefa=${element.id}></i></a>
         </li>`;
     });
     adicionarEventoCheckBox();
@@ -146,11 +147,11 @@ function imprimirListaDeTarefas(listaDeTarefas) {
 function adicionarEventoCheckBox() {
     const listaCheckBox = document.querySelectorAll(".btn-marcar");
     listaCheckBox.forEach(element => {
-        element.onclick = marcarTarefa;
+        element.onclick = aoMarcarTarefa;
     });
 }
 
-function marcarTarefa(evento) {
+function aoMarcarTarefa(evento) {
     const listaDeTarefas = buscarTarefasDoUsuario(usuario);
     let tarefaClicada;
 
@@ -175,11 +176,11 @@ function marcarTarefa(evento) {
 function adicionarEventoExcluir() {
     const listaBtnExcluir = document.querySelectorAll(".btn-excluir");
     listaBtnExcluir.forEach(element => {
-        element.onclick = excluirTarefa;
+        element.onclick = aoExcluirTarefa;
     });
 }
 
-function excluirTarefa(evento) {
+function aoExcluirTarefa(evento) {
     const listaDeTarefas = buscarTarefasDoUsuario(usuario);
     let indice;
 
@@ -199,11 +200,11 @@ function excluirTarefa(evento) {
 function adicionarEventoPrioridade() {
     const listaBtnPrioridade = document.querySelectorAll(".btn-prioridade");
     listaBtnPrioridade.forEach(element => {
-        element.onclick = marcarPrioridade;
+        element.onclick = aoMarcarPrioridade;
     });
 }
 
-function marcarPrioridade(evento) {
+function aoMarcarPrioridade(evento) {
     const listaDeTarefas = buscarTarefasDoUsuario(usuario);
     let tarefaClicada;
 
@@ -222,7 +223,7 @@ function marcarPrioridade(evento) {
     listarTarefasFiltradas();
 }
 
-function editarTarefa(evento) {
+function aoClicarNaTarefa(evento) {
     const listaDeTarefas = buscarTarefasDoUsuario(usuario);
     let tarefaClicada;
 
@@ -236,7 +237,7 @@ function editarTarefa(evento) {
     document.querySelector("#id-tarefa").value = tarefaClicada.id;
 }
 
-function salvarTarefaEditada() {
+function aoClicarNoBotaoSalvar() {
     const novaDescricaoTarefa = document.querySelector("#input-editar-tarefa").value;
     const idTarefa = document.querySelector("#id-tarefa").value;
 
@@ -256,10 +257,12 @@ function salvarTarefaEditada() {
 
 }
 
-function atualizarLink(evento) {
+function aoClicarNosItensDoMenu(evento) {
     const hrefElemento = evento.target.hash;
     window.location.hash = hrefElemento;
+
     atualizarMenu();
+    listarTarefasFiltradas();
 }
 
 function atualizarMenu() {
@@ -273,10 +276,7 @@ function atualizarMenu() {
         elementosHrefEncontrados.forEach(element => {
             element.classList.add("active");
    });
-
-   listarTarefasFiltradas();
 }
-
 
 function listarTarefasFiltradas() {
     const hashDaPagina = window.location.hash;

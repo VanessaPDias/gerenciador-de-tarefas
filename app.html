@@ -17,12 +17,12 @@
     <header class="p-3 border-bottom">
         <div class="container-fluid d-flex justify-content-between align-items-center" style="color: #212529;">
             <div class=" fw-bolder fs-5">
-                <a href="#" class="d-block d-sm-none link-dark text-decoration-none" data-bs-toggle="offcanvas"
+                <a  class="d-block d-sm-none link-dark text-decoration-none" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasToDo" aria-controls="offcanvasToDo">
                     <i class="bi bi-list fs-1 me-2"></i>
                     <span>ToDoList</span>
                 </a>
-                <a href="#" class="link-dark text-decoration-none d-none d-sm-block">
+                <a  class="link-dark text-decoration-none d-none d-sm-block">
                     <img src="./imagens/iconeLista.png" class="me-2" alt="" width="40" height="40">
                     <span>ToDoList</span>
                 </a>
@@ -30,18 +30,18 @@
 
             <div class="d-flex align-items-center justify-content-end">
                 <div class="flex-shrink-0 dropdown me-3">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
+                    <a  class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="./imagens/user.png" alt="" width="40" height="40" class="rounded-circle">
                         <strong id="nome-usuario"></strong>
                     </a>
                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" ><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                        <li><a class="dropdown-item" ><i class="bi bi-person me-2"></i>Perfil</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#" id="btn-sair"><i class="bi bi-power me-2"></i>Sair</a>
+                        <li><a class="dropdown-item"  id="btn-sair"><i class="bi bi-power me-2"></i>Sair</a>
                         </li>
                     </ul>
                 </div>
@@ -55,7 +55,7 @@
                     aria-labelledby="offcanvasToDoLabel">
                     <div class="d-flex flex-column ">
                         <div class="d-flex justify-content-between py-3 ">
-                            <a href="#" class="link-dark text-decoration-none fw-bolder fs-5">ToDoList</a>
+                            <a href="#todas" class="link-dark text-decoration-none fw-bolder fs-5">ToDoList</a>
                             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                                 aria-label="Close"></button>
                         </div>
@@ -106,14 +106,14 @@
                                 </div> -->
                             </div>
                         </div>
-                        <div class="bg-light">
-                            <a href="#" type="button"
+                        <!-- <div class="bg-light">
+                            <a  type="button"
                                 class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none"
                                 style="height: 50px;">
                                 <i class="bi bi-plus"></i>
                                 <span class="">Criar Lista</span>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -153,7 +153,7 @@
                                 <a href="#vencidas" class="list-group-item list-group-item-action border-0 item-menu"><i
                                         class="bi bi-hourglass-bottom me-2"></i>Vencidas</a>
                                 <div class="dropdown">
-                                    <a href="#" class="list-group-item list-group-item-action border-0 item-menu dropdown-toggle"
+                                    <a  class="list-group-item list-group-item-action border-0 item-menu dropdown-toggle"
                                         id="dropdownMenuTodasTarefas" data-bs-toggle="dropdown" aria-expanded="false"><i
                                             class="bi bi-list-ul me-2"></i>Todas</a>
 
@@ -167,14 +167,14 @@
 
                             </div>
                         </div>
-                        <div class="bg-light">
-                            <a href="#" type="button"
+                        <!-- <div class="bg-light">
+                            <a  type="button"
                                 class="d-flex align-items-center justify-content-center btn link-dark text-decoration-none"
                                 style="height: 50px;">
                                 <i class="bi bi-plus"></i>
                                 <span class="">Criar Lista</span>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -204,7 +204,7 @@
                     <div class="input-group my-3">
                         <input type="text" class="form-control fw-normal" id="input-tarefa"
                             placeholder="Digite uma tarefa" aria-label="" aria-describedby="">
-                        <a href="#" id="criar-tarefa">
+                        <a  id="criar-tarefa">
                             <span class="input-group-text" id="btn-criar-tarefa"><i class="bi bi-plus-lg"></i></span>
                         </a>
                     </div>
