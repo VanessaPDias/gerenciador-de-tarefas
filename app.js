@@ -13,7 +13,8 @@ window.onload = iniciar;
 
 function iniciar() {
     imprimirNomeDoUsuario();
-    imprimirListaDeTarefas();
+    imprimirListaDeTarefas(buscarTarefasDoUsuario(usuario));
+    adicionarEventoListarPrioridades()
 
     document.querySelector("#btn-sair").onclick = sair;
 
@@ -22,6 +23,8 @@ function iniciar() {
     document.querySelector("#modal-editar-tarefa").addEventListener("show.bs.modal", editarTarefa);
 
     document.querySelector("#btn-editar-salvar").onclick = salvarTarefaEditada;
+
+
 }
 
 function sair() {
@@ -54,44 +57,47 @@ function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
 function criarTarefa() {
     const inputTarefa = document.querySelector("#input-tarefa").value;
     const id = Date.now();
+    let tarefasEncontradas = buscarTarefasDoUsuario(usuario);
+
     document.querySelector("#input-tarefa").value = "";
 
-    if (buscarTarefasDoUsuario(usuario) == null) {
-        const listaDeTarefas = {
+    if (tarefasEncontradas == null) {
+        const  novaListaDeTarefas = {
             tarefas: []
         };
 
-        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
-        salvarTarefasDoUsuario(usuario, listaDeTarefas);
+         novaListaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
+        salvarTarefasDoUsuario(usuario,  novaListaDeTarefas);
 
     } else {
-        const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-        listaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
+        
+        tarefasEncontradas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
 
-        salvarTarefasDoUsuario(usuario, listaDeTarefas);
+        salvarTarefasDoUsuario(usuario, tarefasEncontradas);
     }
-    imprimirListaDeTarefas();
+    imprimirListaDeTarefas(tarefasEncontradas);
 }
 
 
-function imprimirListaDeTarefas() {
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
 
-    if(listaDeTarefas == null) {
+
+function imprimirListaDeTarefas(listaDeTarefas) {
+   
+    if (listaDeTarefas == null) {
         return;
     }
 
     listaDeTarefas.tarefas.sort(function (a, b) {
-        if(a.prioridade == true && b.prioridade == false){
+        if (a.prioridade == true && b.prioridade == false) {
             return -1;
         }
-        
-        if(a.prioridade == b.prioridade){
-            if(a.id < b.id){
+
+        if (a.prioridade == b.prioridade) {
+            if (a.id < b.id) {
                 return -1;
             }
         }
-        
+
     });
 
     document.querySelector("#lista-de-tarefas").innerHTML = "";
@@ -101,17 +107,17 @@ function imprimirListaDeTarefas() {
         let descricaoDaTarefa = "";
         let prioridade = "";
 
-        if(element.concluida == true){
+        if (element.concluida == true) {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox" checked = "true" data-tarefa=${element.id} value="" >`;
             descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark tarefa-concluida" data-tarefa=${element.id}>${element.descricao}</a>`;
-        } else if(element.concluida == false) {
+        } else if (element.concluida == false) {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.id} value="" >`;
             descricaoDaTarefa = `<a href="#" class="flex-grow-1 link-dark text-decoration-none" data-tarefa=${element.id} data-bs-toggle="modal" data-bs-target="#modal-editar-tarefa">${element.descricao}</a>`;
         }
 
-        if(element.prioridade == true) {
+        if (element.prioridade == true) {
             prioridade = `<i class="bi bi-star-fill link-dark me-3 icone-prioridade" data-tarefa=${element.id}></i>`;
-        } else if(element.prioridade == false) {
+        } else if (element.prioridade == false) {
             prioridade = `<i class="bi bi-star link-dark me-3" data-tarefa=${element.id}></i>`
         }
 
@@ -140,20 +146,20 @@ function marcarTarefa(evento) {
     let tarefaClicada;
 
     listaDeTarefas.tarefas.forEach(element => {
-        if(element.id == evento.target.dataset.tarefa) {
+        if (element.id == evento.target.dataset.tarefa) {
             tarefaClicada = element;
         }
     });
 
-    if(tarefaClicada.concluida == false) {
+    if (tarefaClicada.concluida == false) {
         tarefaClicada.concluida = true;
-    }else if(tarefaClicada.concluida == true){
+    } else if (tarefaClicada.concluida == true) {
         tarefaClicada.concluida = false;
     }
 
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
 
-    imprimirListaDeTarefas()
+    imprimirListaDeTarefas(listaDeTarefas);
 }
 
 
@@ -169,16 +175,16 @@ function excluirTarefa(evento) {
     let indice;
 
     listaDeTarefas.tarefas.forEach((element, i) => {
-        
-        if(element.id == evento.target.dataset.tarefa) {
-           indice = i;
+
+        if (element.id == evento.target.dataset.tarefa) {
+            indice = i;
         }
     });
 
     listaDeTarefas.tarefas.splice(indice, 1);
 
-   salvarTarefasDoUsuario(usuario, listaDeTarefas);
-   imprimirListaDeTarefas();
+    salvarTarefasDoUsuario(usuario, listaDeTarefas);
+    imprimirListaDeTarefas(listaDeTarefas);
 }
 
 function adicionarEventoPrioridade() {
@@ -193,18 +199,18 @@ function marcarPrioridade(evento) {
     let tarefaClicada;
 
     listaDeTarefas.tarefas.forEach(element => {
-        if(element.id == evento.target.dataset.tarefa) {
-            tarefaClicada = element 
+        if (element.id == evento.target.dataset.tarefa) {
+            tarefaClicada = element
         }
     });
 
-    if(tarefaClicada.prioridade == false) {
+    if (tarefaClicada.prioridade == false) {
         tarefaClicada.prioridade = true;
-    }else if(tarefaClicada.prioridade == true) {
+    } else if (tarefaClicada.prioridade == true) {
         tarefaClicada.prioridade = false;
     }
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    imprimirListaDeTarefas();
+    imprimirListaDeTarefas(listaDeTarefas);
 }
 
 function editarTarefa(evento) {
@@ -212,8 +218,8 @@ function editarTarefa(evento) {
     let tarefaClicada;
 
     listaDeTarefas.tarefas.forEach(element => {
-        if(element.id == evento.relatedTarget.dataset.tarefa) {
-            tarefaClicada = element 
+        if (element.id == evento.relatedTarget.dataset.tarefa) {
+            tarefaClicada = element
         }
     });
 
@@ -229,16 +235,39 @@ function salvarTarefaEditada() {
     let tarefaClicada;
 
     listaDeTarefas.tarefas.forEach(element => {
-        if(element.id == idTarefa) {
-            tarefaClicada = element 
+        if (element.id == idTarefa) {
+            tarefaClicada = element
         }
     });
 
     tarefaClicada.descricao = novaDescricaoTarefa;
 
     salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    imprimirListaDeTarefas();
+    imprimirListaDeTarefas(listaDeTarefas);
 
+}
+
+function adicionarEventoListarPrioridades() {
+    const btnListarPrioridade = document.querySelectorAll(".btn-listar-prioridade");
+    btnListarPrioridade.forEach(element => {
+        element.onclick = listarPrioridades;
+    })
+}
+
+
+function listarPrioridades() {
+
+    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+    let tarefasComPrioridade = {
+        tarefas: []
+    }
+
+    listaDeTarefas.tarefas.forEach(element => {
+        if (element.prioridade == true) {
+            tarefasComPrioridade.tarefas.push(element);
+        }
+    });
+    imprimirListaDeTarefas(tarefasComPrioridade);
 }
 
 
