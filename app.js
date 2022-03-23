@@ -65,6 +65,14 @@ function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
 
 function aoClicarNoBotaoCriarTarefa(evento) {
     const inputTarefa = document.querySelector("#input-tarefa").value;
+
+    if(inputTarefa == "") {
+        const elementoToast = document.querySelector("#elemento-toast");
+        const toast = new bootstrap.Toast(elementoToast);
+        toast.show();
+        return;
+    }
+
     const id = Date.now();
     let tarefasEncontradas = buscarTarefasDoUsuario(usuario);
 
