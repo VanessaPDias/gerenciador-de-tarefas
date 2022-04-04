@@ -6,6 +6,7 @@ function recuperarUsuarioLogado() {
     if (usuarioEncontrado == null || usuarioEncontrado.logado !== true) {
         window.location.href = "/entrar.html";
     };
+    
     return usuarioEncontrado;
 }
 
