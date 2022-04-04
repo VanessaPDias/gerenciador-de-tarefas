@@ -1,5 +1,5 @@
 body {
-    background-image: url(./imagens/banner.png);
+    background-image: url(../imagens/banner.png);
 }
 
 
@@ -25,13 +25,13 @@ body {
     
 }
 
-.btn-redefinir {
+.btn-entrar {
     width: 50%;
     background-color: #004759;
     color: #f8f9fa;
 }
 
-.btn-redefinir:hover {
+.btn-entrar:hover {
     background-color: #44AFB3;
     border-color: #004759;
     color: #f8f9fa;

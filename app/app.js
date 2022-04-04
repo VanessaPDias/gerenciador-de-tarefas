@@ -38,7 +38,7 @@ function aoCarregarPagina() {
 
 function aoClicarNoBotaoSair() {
     localStorage.removeItem("logado");
-    window.location.href = "/index.html"
+    window.location.href = "./index.html"
 }
 
 function imprimirNomeDoUsuario() {
@@ -55,6 +55,11 @@ function imprimirNomeDoUsuario() {
 function buscarTarefasDoUsuario(usuario) {
     const chave = usuario.email + "_tarefas";
     const listaDeTarefas = JSON.parse(localStorage.getItem(chave));
+    if(!listaDeTarefas) {
+        return {
+            tarefas: []
+        }
+    }
     return listaDeTarefas;
 }
 

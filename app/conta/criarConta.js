@@ -1,13 +1,11 @@
 
-window.onload = iniciar;
+window.onload = aoCarregarPagina;
 
 
-function iniciar() {
+function aoCarregarPagina() {
     const btnCadastrar = document.querySelector("#btn-cadastrar");
 
-    btnCadastrar.onclick = cadastrarUsuario;
-
-    document.querySelector("#inputEmail").onfocus = limparErro;
+    btnCadastrar.onclick = aoCadastrarUsuario;
 
 }
 //função contrutora do objeto Usuario
@@ -19,7 +17,7 @@ function Usuario(nome, email, senha) {
 
 
 //função chamada pelo click do botao, recebe como parametro o objeto do evento click
-function cadastrarUsuario(evento) {
+function aoCadastrarUsuario(evento) {
     const nomeUsuario = document.querySelector("#inputNome").value;
     const emailUsuario = document.querySelector("#inputEmail").value;
     const senhaUsuario = document.querySelector("#inputSenha").value;
@@ -36,9 +34,11 @@ function cadastrarUsuario(evento) {
 
     //condição para verificar se email já foi cadastrado
     if (localStorage.getItem(usuario.email) !== null) {
-       document.querySelector("#erro").innerHTML = `Já existe um usuário cadastrado com esse email.`
-       
-       //interrompe o submit do formulario
+        const elementoToast = document.querySelector("#elemento-toast");
+        const toast = new bootstrap.Toast(elementoToast);
+        toast.show();
+
+        //interrompe o submit do formulario
         return false;
     }
 
@@ -46,9 +46,7 @@ function cadastrarUsuario(evento) {
     localStorage.setItem(usuario.email, JSON.stringify(usuario));
 }
 
-function limparErro() {
-    document.querySelector("#erro").innerHTML = ``;
-}
+
 
 
 
