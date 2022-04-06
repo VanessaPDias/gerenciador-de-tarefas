@@ -106,10 +106,17 @@ function buscarTarefas(req, res) {
 
 function criarTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
+    const descricaoDaTarefa = req.body.descricao;
+
     const novaTarefa = {
         tarefaId: crypto.randomUUID(),
-        descricao: req.body.descricao
+        descricao:descricaoDaTarefa 
     };
+
+    if(!descricaoDaTarefa) {
+        res.status(400).send({erro: "Tarefa sem descrição"});
+        return;
+    }
 
     listaDeUsuarios.usuarios.forEach(usuario => {
         if(usuarioId == usuario.id) {
