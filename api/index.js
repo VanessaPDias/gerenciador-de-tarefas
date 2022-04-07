@@ -22,7 +22,7 @@ app.post('/login', login);
 app.get('/usuarios/:id', buscarUsuario);
 app.get('/usuarios/:usuarioid/tarefas', buscarTarefas);
 app.post('/usuarios/:usuarioid/tarefas', criarTarefa);
-app.patch('/usuarios/:usuarioid/tarefas/:tarefaid', marcarTarefa);
+app.patch('/usuarios/:usuarioid/tarefas/:tarefaid', alterarTarefa);
 app.delete('/usuarios/:usuarioid/tarefas/:tarefaid', excluirTarefa);
 
 function criarUsuario(req, res) {
@@ -34,35 +34,31 @@ function criarUsuario(req, res) {
         listaDeTarefas: []
     };
 
-    let usuarioDuplicado = false;
+    const usuarioEncontrado = listaDeUsuarios.usuarios.find(usuario => usuario.email == usuario.email);
 
-    listaDeUsuarios.usuarios.forEach(element => {
-        if (element.email == usuario.email) {
-            usuarioDuplicado = true;
-        }
-
-    })
-
-    if (usuarioDuplicado == true) {
+    if(!usuarioEncontrado) {
+        listaDeUsuarios.usuarios.push(usuario);
+        res.send({ usuarioId: usuario.id });
+    } else {
         res.status(400).send({ erro: "email já foi cadastrado" });
-        return;
     }
 
-    listaDeUsuarios.usuarios.push(usuario);
-    res.send({ usuarioId: usuario.id });
+     console.log(listaDeUsuarios)
+
 }
 
 function login(req, res) {
     const email = req.body.email;
     const senha = req.body.senha;
 
-    listaDeUsuarios.usuarios.forEach(usuario => {
-        if (usuario.email == email && usuario.senha == senha) {
-            res.send({ usuarioId: usuario.id });
-        } else {
-            res.status(400).send({ erro: "Usuário ou senha incorretos" });
-        }
-    })
+    const usuarioEncontrado = listaDeUsuarios.usuarios.find(usuario => email == usuario.email && senha == usuario.senha);
+
+    if(!usuarioEncontrado) {
+        res.status(400).send({ erro: "Usuário ou senha incorretos" });
+    } else {
+        res.send({ usuarioId: usuarioEncontrado.id });
+    }
+
 
 }
 
@@ -101,7 +97,8 @@ function criarTarefa(req, res) {
     const novaTarefa = {
         tarefaId: crypto.randomUUID(),
         descricao: descricaoDaTarefa,
-        tarefaConcluida: false
+        tarefaConcluida: false,
+        tarefaComPrioridade: false
     };
 
     if (!descricaoDaTarefa) {
@@ -115,29 +112,45 @@ function criarTarefa(req, res) {
         res.status(404).send({ erro: "Usuário não encontrado" });
     } else {
         usuarioEncontrado.listaDeTarefas.push(novaTarefa);
-        res.send()
+        res.send({tarefaId: novaTarefa.tarefaId})
     }
 
 }
 
-function marcarTarefa(req, res) {
+function alterarTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
     let usuarioEncontrado = listaDeUsuarios.usuarios.find(usuario => usuario.id == usuarioId);
-    let tarefaEncontrada = usuarioEncontrado.listaDeTarefas.find(tarefa => tarefa.tarefaId == tarefaId);
 
     if (!usuarioEncontrado) {
         res.status(404).send({ erro: "Usuário não encontrado." });
         return;
     }
 
+    let tarefaEncontrada = usuarioEncontrado.listaDeTarefas.find(tarefa => tarefa.tarefaId == tarefaId);
+
     if (!tarefaEncontrada) {
         res.status(404).send({ erro: "Tarefa não encontrada." });
         return;
     }
 
-    tarefaEncontrada.tarefaConcluida = req.body.tarefaConcluida;
+    const descricaoDaTarefa = req.body.descricao;
+    const tarefaConcluida = req.body.tarefaConcluida;
+    const tarefaComPrioridade = req.body.tarefaComPrioridade;
+
+    if(descricaoDaTarefa != undefined && descricaoDaTarefa != null && descricaoDaTarefa != "") {
+        tarefaEncontrada.descricao = descricaoDaTarefa;
+    }
+
+    if(typeof(tarefaConcluida) == 'boolean') {
+        tarefaEncontrada.tarefaConcluida = tarefaConcluida;
+    }
+
+    
+    if(typeof(tarefaComPrioridade) == 'boolean') {
+        tarefaEncontrada.tarefaComPrioridade = tarefaComPrioridade;
+    }
 
     res.send();
 }
