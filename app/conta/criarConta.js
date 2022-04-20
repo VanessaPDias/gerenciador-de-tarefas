@@ -29,21 +29,45 @@ function aoCadastrarUsuario(evento) {
         return;
     };
 
-    //cria um novo objeto Usuario
-    let usuario = new Usuario(nomeUsuario, emailUsuario, senhaUsuario);
+    //endpoint
+    const url = 'http://localhost:3000/usuarios';
 
-    //condição para verificar se email já foi cadastrado
-    if (localStorage.getItem(usuario.email) !== null) {
-        const elementoToast = document.querySelector("#elemento-toast");
-        const toast = new bootstrap.Toast(elementoToast);
-        toast.show();
+    //construtor do objeto Request - cria a requisição para o servidor
+    const request = new Request(url, {
+        method: 'POST',
+        //conteudo enviado
+        body: JSON.stringify(
+            {
+                nome: nomeUsuario,
+                email: emailUsuario,
+                senha: senhaUsuario
+            }),
+        headers: {
+            //tipo de conteudo enviado
+            "Content-Type": "application/json"
+        }
+    });
 
-        //interrompe o submit do formulario
-        return false;
-    }
+    //faz a solicitacao para o servidor
+    fetch(request)
+        //promise com a resposta enviada pelo servidor
+        .then(function (resp) {
+            if (resp.ok) {
+                window.location.href = "/login/entrar.html";
+            } else {
+                //converte a resposta para json
+                 resp.json().then(function (respConvertida) {
+                    const elementoToast = document.querySelector("#elemento-toast");
+                    const toast = new bootstrap.Toast(elementoToast);
+                    
+                    document.querySelector("#mensagem-erro").innerHTML = respConvertida.erro;
+                    toast.show();
+                })
+            }
+        })
+       
 
-    //função para criar uma entrada no banco de dados (chave: valor)
-    localStorage.setItem(usuario.email, JSON.stringify(usuario));
+    return false;
 }
 
 

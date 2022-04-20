@@ -13,8 +13,11 @@ function criarUsuario(req, res) {
         listaDeTarefas: []
     };
 
+    if(!novoUsuario.email) {
+        res.status(400).send({erro: "Não é possível cadastrar usuário sem email"});
+        return;
+    }
 
-    novoUsuario.batatas = 10.;
 
     const usuarioEncontrado = dados.usuarios.find(usuario => novoUsuario.email == usuario.email);
 
@@ -22,7 +25,7 @@ function criarUsuario(req, res) {
         dados.usuarios.push(novoUsuario);
         res.send({ usuarioId: novoUsuario.id });
     } else {
-        res.status(400).send({ erro: "email já foi cadastrado" });
+        res.status(400).send({ erro: "Email já foi cadastrado" });
     }
 
 }

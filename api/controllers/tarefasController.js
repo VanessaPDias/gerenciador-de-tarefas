@@ -98,7 +98,7 @@ function excluirTarefa(req, res) {
 
     usuarioEncontrado.listaDeTarefas = usuarioEncontrado.listaDeTarefas.filter(tarefa => tarefa.tarefaId != tarefaId);
 
-    res.send(usuarioEncontrado.listaDeTarefas);
+    res.send();
 }
 
 module.exports = {

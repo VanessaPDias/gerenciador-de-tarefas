@@ -31,7 +31,7 @@
                     <p class="card-text">ou</p>
                     
                     
-                    <form class="formulario-dados mb-3 mx-auto" id="formulario" action="../login/entrar.html">
+                    <form class="formulario-dados mb-3 mx-auto" id="formulario">
                         <p class="fs-6 text-danger text-start" id="erro"></p>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="inputNome" placeholder="Maria" required>
@@ -59,7 +59,7 @@
             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
-                    Já existe um usuário cadastrado com esse email.
+                   <p id="mensagem-erro"></p>
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
                     aria-label="Close"></button>
