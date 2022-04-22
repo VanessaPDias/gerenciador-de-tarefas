@@ -8,8 +8,8 @@ function iniciar() {
 }
 
 function validarUsuario(evento) {
-    const inputEmail = document.querySelector("#inputEmail").value;
-    const inputSenha = document.querySelector("#inputSenha").value;
+    const emailUsuario = document.querySelector("#inputEmail").value;
+    const senhaUsuario = document.querySelector("#inputSenha").value;
 
     const formulario = document.querySelector("#formulario");
 
@@ -18,27 +18,48 @@ function validarUsuario(evento) {
         return;
     };
 
-    if (localStorage.getItem(inputEmail) == null) {
-        document.querySelector("#erro").innerHTML = `Usuário ou senha incorretos.`;
-        return false;
-    }
 
+    //endpoint
+    const url = 'http://localhost:3000/login';
 
-    if (localStorage.getItem(inputEmail) !== null) {
-        const usuario = JSON.parse(localStorage.getItem(inputEmail));
-
-        if (inputSenha === usuario.senha) {
-            localStorage.setItem("logado", JSON.stringify({ logado: true, nome: usuario.nome, email: usuario.email }));
-            return true;
-
-        } else {
-            const elementoToast = document.querySelector("#elemento-toast");
-            const toast = new bootstrap.Toast(elementoToast);
-            toast.show();
-            return false;
+    //construtor do objeto Request - cria a requisição para o servidor
+    const request = new Request(url, {
+        method: 'POST',
+        //conteudo enviado
+        body: JSON.stringify(
+            {
+                email: emailUsuario,
+                senha: senhaUsuario
+            }),
+        headers: {
+            //tipo de conteudo enviado
+            "Content-Type": "application/json"
         }
-    }
+    });
 
+    //faz a solicitacao para o servidor
+    fetch(request)
+        //promise com a resposta enviada pelo servidor
+        .then(function (resp) {
+            if (resp.ok) {
+                resp.json().then(function(respConvertida){
+                localStorage.setItem("logado", JSON.stringify({ usuarioId: respConvertida.usuarioId, nome: respConvertida.nome, email: respConvertida.email, tarefas: respConvertida.tarefas }));
+                window.location.href = "../app.html";    
+                })
+                
+            } else {
+                //converte a resposta para json
+                resp.json().then(function (respConvertida) {
+                    const elementoToast = document.querySelector("#elemento-toast");
+                    const toast = new bootstrap.Toast(elementoToast);
+
+                    document.querySelector("#mensagem-erro").innerHTML = respConvertida.erro;
+                    toast.show();
+                })
+            }
+        })
+
+    return false;
 }
 
 

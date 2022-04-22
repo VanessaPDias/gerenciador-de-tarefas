@@ -1,13 +1,36 @@
-const usuario = recuperarUsuarioLogado();
+
+
+recuperarUsuarioLogado();
 
 function recuperarUsuarioLogado() {
     const usuarioEncontrado = JSON.parse(localStorage.getItem("logado"));
 
-    if (usuarioEncontrado == null || usuarioEncontrado.logado !== true) {
-        window.location.href = "/entrar.html";
+    if (!usuarioEncontrado) {
+        window.location.href = "/login/entrar.html";
     };
+
+    buscarUsuario(usuarioEncontrado);
     
     return usuarioEncontrado;
+}
+
+function buscarUsuario(usuarioEncontrado) {
+    const url =  `http://localhost:3000/usuarios/${usuarioEncontrado.usuarioId}`;
+
+    fetch(url)
+    .then(function(resp){
+        if(resp.ok) {
+            resp.json().then(function(respConvertida){
+                const usuario = respConvertida;
+                imprimirNomeDoUsuario(usuario);
+                atualizarMenu();
+                listarTarefasFiltradas(usuario);
+            })
+        }
+
+    })
+
+
 }
 
 if(window.location.hash == "") {
@@ -17,9 +40,8 @@ if(window.location.hash == "") {
 window.onload = aoCarregarPagina;
 
 function aoCarregarPagina() {
-    imprimirNomeDoUsuario();
-    atualizarMenu();
-    listarTarefasFiltradas();
+    
+    
 
     const itensDoMenu = document.querySelectorAll(".item-menu");
     itensDoMenu.forEach(element => {
@@ -42,7 +64,7 @@ function aoClicarNoBotaoSair() {
     window.location.href = "./index.html"
 }
 
-function imprimirNomeDoUsuario() {
+function imprimirNomeDoUsuario(usuario) {
     const nomeUsuario = document.querySelector("#nome-usuario");
 
     const nomeCompleto = usuario.nome;
@@ -112,11 +134,11 @@ function imprimirListaDeTarefas(listaDeTarefas) {
     }
 
     listaDeTarefas.tarefas.sort(function (a, b) {
-        if (a.prioridade == true && b.prioridade == false) {
+        if (a.tarefaComPrioridade == true && b.tarefaComPrioridade == false) {
             return -1;
         }
 
-        if (a.prioridade == b.prioridade) {
+        if (a.tarefaComPrioridade == b.tarefaComPrioridade) {
             if (a.id < b.id) {
                 return -1;
             }
@@ -131,25 +153,25 @@ function imprimirListaDeTarefas(listaDeTarefas) {
         let descricaoDaTarefa = "";
         let prioridade = "";
 
-        if (element.concluida == true) {
+        if (element.tarefaConcluida == true) {
             checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox" checked = "true" data-tarefa=${element.id} value="" >`;
-            descricaoDaTarefa = `<a class="flex-grow-1 link-dark tarefa-concluida" data-tarefa=${element.id}>${element.descricao}</a>`;
-        } else if (element.concluida == false) {
-            checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.id} value="" >`;
-            descricaoDaTarefa = `<a class="flex-grow-1 link-dark text-decoration-none" data-tarefa=${element.id} data-bs-toggle="modal" data-bs-target="#modal-editar-tarefa">${element.descricao}</a>`;
+            descricaoDaTarefa = `<a class="flex-grow-1 link-dark tarefa-concluida" data-tarefa=${element.tarefaId}>${element.descricao}</a>`;
+        } else if (element.tarefaConcluida == false) {
+            checkbox = `<input class="form-check-input me-2 btn-marcar" type="checkbox"  data-tarefa=${element.tarefaId} value="" >`;
+            descricaoDaTarefa = `<a class="flex-grow-1 link-dark text-decoration-none" data-tarefa=${element.tarefaId} data-bs-toggle="modal" data-bs-target="#modal-editar-tarefa">${element.descricao}</a>`;
         }
 
-        if (element.prioridade == true) {
-            prioridade = `<i class="bi bi-star-fill link-dark me-3 icone-prioridade" data-tarefa=${element.id}></i>`;
-        } else if (element.prioridade == false) {
-            prioridade = `<i class="bi bi-star link-dark me-3" data-tarefa=${element.id}></i>`
+        if (element.tarefaComPrioridade == true) {
+            prioridade = `<i class="bi bi-star-fill link-dark me-3 icone-prioridade" data-tarefa=${element.tarefaId}></i>`;
+        } else if (element.tarefaComPrioridade == false) {
+            prioridade = `<i class="bi bi-star link-dark me-3" data-tarefa=${element.tarefaId}></i>`
         }
 
         document.querySelector("#lista-de-tarefas").innerHTML = document.querySelector("#lista-de-tarefas").innerHTML +
             `<li class="tarefa list-group-item mb-2 d-flex">
             ${checkbox + descricaoDaTarefa}
             <a class="btn-prioridade">${prioridade}</a>
-            <a class="btn-excluir"><i class="bi bi-trash link-dark" data-tarefa=${element.id}></i></a>
+            <a class="btn-excluir"><i class="bi bi-trash link-dark" data-tarefa=${element.tarefaId}></i></a>
         </li>`;
     });
     adicionarEventoCheckBox();
@@ -292,37 +314,37 @@ function atualizarMenu() {
    });
 }
 
-function listarTarefasFiltradas() {
+function listarTarefasFiltradas(usuario) {
     const hashDaPagina = window.location.hash;
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
+
     let tarefasFiltradas = {
         tarefas: []
     }
 
     if(hashDaPagina == "#todas") {
-        listaDeTarefas.tarefas.forEach(element => {
+        usuario.tarefas.forEach(element => {
             tarefasFiltradas.tarefas.push(element);
         });
     } else if(hashDaPagina == "#a-fazer") {
-        listaDeTarefas.tarefas.forEach(element => {
+        usuario.tarefas.forEach(element => {
             if(element.concluida == false) {
                 tarefasFiltradas.tarefas.push(element);
             }
         });
     } else if(hashDaPagina == "#concluidas") {
-        listaDeTarefas.tarefas.forEach(element => {
+        usuario.tarefas.forEach(element => {
             if(element.concluida == true) {
                 tarefasFiltradas.tarefas.push(element);
             }
         });
     } else if(hashDaPagina == "#prioridades") {
-        listaDeTarefas.tarefas.forEach(element => {
+        usuario.tarefas.forEach(element => {
             if(element.prioridade == true) {
                 tarefasFiltradas.tarefas.push(element);
             }
         });
     } else {
-        tarefasFiltradas = listaDeTarefas;
+        tarefasFiltradas = usuario;
     }
     
     imprimirListaDeTarefas(tarefasFiltradas);

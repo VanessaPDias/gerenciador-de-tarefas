@@ -42,7 +42,8 @@ function buscarUsuario(req, res) {
     res.send({
         id: usuarioEncontrado.id,
         nome: usuarioEncontrado.nome,
-        email: usuarioEncontrado.email
+        email: usuarioEncontrado.email,
+        tarefas:usuarioEncontrado.listaDeTarefas
     });
 }
 
