@@ -1,5 +1,4 @@
-
-
+let usuarioId = "";
 recuperarUsuarioLogado();
 
 function recuperarUsuarioLogado() {
@@ -8,6 +7,8 @@ function recuperarUsuarioLogado() {
     if (!usuarioEncontrado) {
         window.location.href = "/login/entrar.html";
     };
+    
+    usuarioId = usuarioEncontrado.usuarioId;
 
     buscarUsuario(usuarioEncontrado);
     
@@ -22,8 +23,10 @@ function buscarUsuario(usuarioEncontrado) {
         if(resp.ok) {
             resp.json().then(function(respConvertida){
                 const usuario = respConvertida;
+                
                 imprimirNomeDoUsuario(usuario);
                 atualizarMenu();
+                buscarTarefasDoUsuario(usuarioId)
                 listarTarefasFiltradas(usuario);
             })
         }
@@ -41,8 +44,6 @@ window.onload = aoCarregarPagina;
 
 function aoCarregarPagina() {
     
-    
-
     const itensDoMenu = document.querySelectorAll(".item-menu");
     itensDoMenu.forEach(element => {
         element.onclick = aoClicarNosItensDoMenu;
@@ -75,15 +76,20 @@ function imprimirNomeDoUsuario(usuario) {
 
 
 
-function buscarTarefasDoUsuario(usuario) {
-    const chave = usuario.email + "_tarefas";
-    const listaDeTarefas = JSON.parse(localStorage.getItem(chave));
-    if(!listaDeTarefas) {
-        return {
-            tarefas: []
+function buscarTarefasDoUsuario(usuarioId) {
+    const url =  `http://localhost:3000/usuarios/${usuarioId}/tarefas`;
+
+    fetch(url)
+    .then(function(resp) {
+        if(resp.ok) {
+            resp.json().then(function(respConvertida){
+                const usuario = respConvertida;
+               imprimirListaDeTarefas(usuario.tarefas)
+            })
         }
-    }
-    return listaDeTarefas;
+    })
+    
+    
 }
 
 function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
@@ -92,36 +98,43 @@ function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
 }
 
 function aoClicarNoBotaoCriarTarefa(evento) {
-    const inputTarefa = document.querySelector("#input-tarefa").value;
-
-    if(inputTarefa == "") {
-        const elementoToast = document.querySelector("#elemento-toast");
-        const toast = new bootstrap.Toast(elementoToast);
-        toast.show();
-        return;
-    }
-
-    const id = Date.now();
-    let tarefasEncontradas = buscarTarefasDoUsuario(usuario);
+    const descricaoDaTarefa = document.querySelector("#input-tarefa").value;
 
     document.querySelector("#input-tarefa").value = "";
 
-    if (tarefasEncontradas == null) {
-        const  novaListaDeTarefas = {
-            tarefas: []
-        };
+    //endpoint
+    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas`;
 
-        novaListaDeTarefas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
-        tarefasEncontradas = novaListaDeTarefas;
-        salvarTarefasDoUsuario(usuario,  tarefasEncontradas);
+    //construtor do objeto Request - cria a requisição para o servidor
+    const request = new Request(url, {
+        method: 'POST',
+        //conteudo enviado
+        body: JSON.stringify(
+            {
+                descricao: descricaoDaTarefa
+            }),
+        headers: {
+            //tipo de conteudo enviado
+            "Content-Type": "application/json"
+        }
+    });
 
-    } else {
-        
-        tarefasEncontradas.tarefas.push({ id: id, descricao: inputTarefa, concluida: false, prioridade: false });
+    fetch(request)
+    .then(function(resp) {
+        if(resp.ok) {
+            buscarTarefasDoUsuario(usuarioId)
+           
+        } else {
+            resp.json().then(function (respConvertida) {
+                const elementoToast = document.querySelector("#elemento-toast");
+                const toast = new bootstrap.Toast(elementoToast);
+                
+                document.querySelector("#mensagem-erro").innerHTML = respConvertida.erro;
+                toast.show();
+            })
+        }
+    })
 
-        salvarTarefasDoUsuario(usuario, tarefasEncontradas);
-    }
-    imprimirListaDeTarefas(tarefasEncontradas);
 }
 
 
@@ -133,7 +146,7 @@ function imprimirListaDeTarefas(listaDeTarefas) {
         return;
     }
 
-    listaDeTarefas.tarefas.sort(function (a, b) {
+    listaDeTarefas.sort(function (a, b) {
         if (a.tarefaComPrioridade == true && b.tarefaComPrioridade == false) {
             return -1;
         }
@@ -148,7 +161,7 @@ function imprimirListaDeTarefas(listaDeTarefas) {
 
     document.querySelector("#lista-de-tarefas").innerHTML = "";
 
-    listaDeTarefas.tarefas.forEach(element => {
+    listaDeTarefas.forEach(element => {
         let checkbox = "";
         let descricaoDaTarefa = "";
         let prioridade = "";
@@ -314,7 +327,7 @@ function atualizarMenu() {
    });
 }
 
-function listarTarefasFiltradas(usuario) {
+function  listarTarefasFiltradas(usuario) {
     const hashDaPagina = window.location.hash;
 
     let tarefasFiltradas = {

@@ -8,12 +8,12 @@ function aoCarregarPagina() {
     btnCadastrar.onclick = aoCadastrarUsuario;
 
 }
-//função contrutora do objeto Usuario
-function Usuario(nome, email, senha) {
-    this.nome = nome.toUpperCase();
-    this.email = email;
-    this.senha = senha;
-}
+// //função contrutora do objeto Usuario
+// function Usuario(nome, email, senha) {
+//     this.nome = nome.toUpperCase();
+//     this.email = email;
+//     this.senha = senha;
+// }
 
 
 //função chamada pelo click do botao, recebe como parametro o objeto do evento click
