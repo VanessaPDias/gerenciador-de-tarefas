@@ -7,43 +7,43 @@ function recuperarUsuarioLogado() {
     if (!usuarioEncontrado) {
         window.location.href = "/login/entrar.html";
     };
-    
+
     usuarioId = usuarioEncontrado.usuarioId;
 
     buscarUsuario(usuarioEncontrado);
-    
+
     return usuarioEncontrado;
 }
 
 function buscarUsuario(usuarioEncontrado) {
-    const url =  `http://localhost:3000/usuarios/${usuarioEncontrado.usuarioId}`;
+    const url = `http://localhost:3000/usuarios/${usuarioEncontrado.usuarioId}`;
 
     fetch(url)
-    .then(function(resp){
-        if(resp.ok) {
-            resp.json().then(function(respConvertida){
-                const usuario = respConvertida;
-                
-                imprimirNomeDoUsuario(usuario);
-                atualizarMenu();
-                buscarTarefasDoUsuario(usuarioId)
-                listarTarefasFiltradas(usuario);
-            })
-        }
+        .then(function (resp) {
+            if (resp.ok) {
+                resp.json().then(function (respConvertida) {
+                    const usuario = respConvertida;
 
-    })
+                    imprimirNomeDoUsuario(usuario);
+                    atualizarMenu();
+                    buscarTarefasDoUsuario(usuarioId)
+                    listarTarefasFiltradas(usuario.tarefas);
+                })
+            }
+
+        })
 
 
 }
 
-if(window.location.hash == "") {
+if (window.location.hash == "") {
     window.location.hash = "todas"
 }
 
 window.onload = aoCarregarPagina;
 
 function aoCarregarPagina() {
-    
+
     const itensDoMenu = document.querySelectorAll(".item-menu");
     itensDoMenu.forEach(element => {
         element.onclick = aoClicarNosItensDoMenu;
@@ -77,19 +77,19 @@ function imprimirNomeDoUsuario(usuario) {
 
 
 function buscarTarefasDoUsuario(usuarioId) {
-    const url =  `http://localhost:3000/usuarios/${usuarioId}/tarefas`;
+    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas`;
 
     fetch(url)
-    .then(function(resp) {
-        if(resp.ok) {
-            resp.json().then(function(respConvertida){
-                const usuario = respConvertida;
-               imprimirListaDeTarefas(usuario.tarefas)
-            })
-        }
-    })
-    
-    
+        .then(function (resp) {
+            if (resp.ok) {
+                resp.json().then(function (respConvertida) {
+                    const usuario = respConvertida;
+                    listarTarefasFiltradas(usuario.tarefas)
+                })
+            }
+        })
+
+
 }
 
 function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
@@ -120,20 +120,20 @@ function aoClicarNoBotaoCriarTarefa(evento) {
     });
 
     fetch(request)
-    .then(function(resp) {
-        if(resp.ok) {
-            buscarTarefasDoUsuario(usuarioId)
-           
-        } else {
-            resp.json().then(function (respConvertida) {
-                const elementoToast = document.querySelector("#elemento-toast");
-                const toast = new bootstrap.Toast(elementoToast);
-                
-                document.querySelector("#mensagem-erro").innerHTML = respConvertida.erro;
-                toast.show();
-            })
-        }
-    })
+        .then(function (resp) {
+            if (resp.ok) {
+                buscarTarefasDoUsuario(usuarioId)
+
+            } else {
+                resp.json().then(function (respConvertida) {
+                    const elementoToast = document.querySelector("#elemento-toast");
+                    const toast = new bootstrap.Toast(elementoToast);
+
+                    document.querySelector("#mensagem-erro").innerHTML = respConvertida.erro;
+                    toast.show();
+                })
+            }
+        })
 
 }
 
@@ -230,20 +230,23 @@ function adicionarEventoExcluir() {
 }
 
 function aoExcluirTarefa(evento) {
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-    let indice;
+    const tarefaId = evento.target.dataset.tarefa;
 
-    listaDeTarefas.tarefas.forEach((element, i) => {
+    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`;
 
-        if (element.id == evento.target.dataset.tarefa) {
-            indice = i;
-        }
+    const request = new Request(url, {
+        method: 'DELETE',
+        headers: new Headers()
     });
 
-    listaDeTarefas.tarefas.splice(indice, 1);
+    fetch(request)
+        .then(function (resp) {
+            if (resp.ok) {
+                buscarTarefasDoUsuario(usuarioId);
 
-    salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    listarTarefasFiltradas();
+            }
+        })
+
 }
 
 function adicionarEventoPrioridade() {
@@ -322,44 +325,45 @@ function atualizarMenu() {
 
     const hashDaPagina = window.location.hash;
     const elementosHrefEncontrados = document.querySelectorAll(`*[href='${hashDaPagina}']`);
-        elementosHrefEncontrados.forEach(element => {
-            element.classList.add("active");
-   });
+    elementosHrefEncontrados.forEach(element => {
+        element.classList.add("active");
+    });
 }
 
-function  listarTarefasFiltradas(usuario) {
+function listarTarefasFiltradas(tarefas) {
+
     const hashDaPagina = window.location.hash;
 
-    let tarefasFiltradas = {
-        tarefas: []
-    }
+    let tarefasFiltradas = [];
+        
+    
 
-    if(hashDaPagina == "#todas") {
-        usuario.tarefas.forEach(element => {
-            tarefasFiltradas.tarefas.push(element);
+    if (hashDaPagina == "#todas") {
+        tarefas.forEach(element => {
+            tarefasFiltradas.push(element);
         });
-    } else if(hashDaPagina == "#a-fazer") {
-        usuario.tarefas.forEach(element => {
-            if(element.concluida == false) {
-                tarefasFiltradas.tarefas.push(element);
+    } else if (hashDaPagina == "#a-fazer") {
+        tarefas.forEach(element => {
+            if (element.concluida == false) {
+                tarefasFiltradas.push(element);
             }
         });
-    } else if(hashDaPagina == "#concluidas") {
-        usuario.tarefas.forEach(element => {
-            if(element.concluida == true) {
-                tarefasFiltradas.tarefas.push(element);
+    } else if (hashDaPagina == "#concluidas") {
+        tarefas.forEach(element => {
+            if (element.concluida == true) {
+                tarefasFiltradas.push(element);
             }
         });
-    } else if(hashDaPagina == "#prioridades") {
-        usuario.tarefas.forEach(element => {
-            if(element.prioridade == true) {
-                tarefasFiltradas.tarefas.push(element);
+    } else if (hashDaPagina == "#prioridades") {
+        tarefas.forEach(element => {
+            if (element.prioridade == true) {
+                tarefasFiltradas.push(element);
             }
         });
     } else {
-        tarefasFiltradas = usuario;
+        tarefasFiltradas = tarefas;
     }
-    
+
     imprimirListaDeTarefas(tarefasFiltradas);
 }
 
