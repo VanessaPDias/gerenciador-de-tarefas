@@ -376,8 +376,6 @@ function aoClicarNoBotaoSalvar() {
             }
         })
     
-    
-    
 
 }
 
@@ -386,13 +384,13 @@ function aoClicarNosItensDoMenu(evento) {
     window.location.hash = hrefElemento;
 
     atualizarMenu();
-    listarTarefasFiltradas();
+    buscarTarefasDoUsuario(usuarioId);
 }
 
 function atualizarMenu() {
     const itensDoMenu = document.querySelectorAll(".item-menu");
-    itensDoMenu.forEach(element => {
-        element.classList.remove("active");
+    itensDoMenu.forEach(item => {
+        item.classList.remove("active");
     });
 
     const hashDaPagina = window.location.hash;
@@ -414,19 +412,19 @@ function listarTarefasFiltradas(tarefas) {
         });
     } else if (hashDaPagina == "#a-fazer") {
         tarefas.forEach(element => {
-            if (element.concluida == false) {
+            if (element.tarefaConcluida == false) {
                 tarefasFiltradas.push(element);
             }
         });
     } else if (hashDaPagina == "#concluidas") {
         tarefas.forEach(element => {
-            if (element.concluida == true) {
+            if (element.tarefaConcluida == true) {
                 tarefasFiltradas.push(element);
             }
         });
     } else if (hashDaPagina == "#prioridades") {
         tarefas.forEach(element => {
-            if (element.prioridade == true) {
+            if (element.tarefaComPrioridade == true) {
                 tarefasFiltradas.push(element);
             }
         });
