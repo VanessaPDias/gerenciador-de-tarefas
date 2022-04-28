@@ -14,6 +14,26 @@ function buscarTarefas(req, res) {
     res.send({ tarefas: usuarioEncontrado.listaDeTarefas });
 }
 
+function buscarTarefaComId(req, res) {
+    const usuarioId = req.params.usuarioid;
+    const tarefaId = req.params.tarefaid;
+
+    let usuarioEncontrado = dados.usuarios.find(usuario => usuario.id == usuarioId);
+    if (!usuarioEncontrado) {
+        res.status(404).send({ erro: "Usuário não encontrado." });
+        return;
+    }
+
+    let tarefaEncontrada = usuarioEncontrado.listaDeTarefas.find(tarefa => tarefa.tarefaId == tarefaId);
+    if (!tarefaEncontrada) {
+        res.status(404).send({ erro: "Tarefa não encontrada." });
+        return;
+    }
+
+    res.send({ descricao: tarefaEncontrada.descricao });
+}
+
+
 function criarTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
     const descricaoDaTarefa = req.body.descricao;
@@ -103,6 +123,7 @@ function excluirTarefa(req, res) {
 
 module.exports = {
    buscarTarefas: buscarTarefas,
+   buscarTarefaComId: buscarTarefaComId,
    criarTarefa: criarTarefa,
    alterarTarefa: alterarTarefa,
    excluirTarefa: excluirTarefa

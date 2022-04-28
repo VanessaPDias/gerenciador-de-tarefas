@@ -206,7 +206,7 @@ function aoMarcarTarefa(evento) {
 
     const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`
 
-    if(checkbox == true) {
+    if (checkbox == true) {
         const request = new Request(url, {
             method: 'PATCH',
             body: JSON.stringify(
@@ -216,18 +216,18 @@ function aoMarcarTarefa(evento) {
             headers: {
                 "Content-Type": "application/json"
             }
-            
+
         });
 
         fetch(request)
-        .then(function(resp) {
-            if(resp.ok) {
-                buscarTarefasDoUsuario(usuarioId);
-            }
-        })
+            .then(function (resp) {
+                if (resp.ok) {
+                    buscarTarefasDoUsuario(usuarioId);
+                }
+            })
     }
 
-    if(!checkbox) {
+    if (!checkbox) {
         const request = new Request(url, {
             method: 'PATCH',
             body: JSON.stringify(
@@ -240,11 +240,11 @@ function aoMarcarTarefa(evento) {
         });
 
         fetch(request)
-        .then(function(resp) {
-            if(resp.ok) {
-                buscarTarefasDoUsuario(usuarioId);
-            }
-        })
+            .then(function (resp) {
+                if (resp.ok) {
+                    buscarTarefasDoUsuario(usuarioId);
+                }
+            })
     }
 
 }
@@ -292,7 +292,7 @@ function aoMarcarPrioridade(evento) {
 
     const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`
 
-    if(!booleanPrioridade) {
+    if (!booleanPrioridade) {
         const request = new Request(url, {
             method: 'PATCH',
             body: JSON.stringify(
@@ -305,12 +305,12 @@ function aoMarcarPrioridade(evento) {
         });
 
         fetch(request)
-        .then(function(resp) {
-            if(resp.ok) {
-                buscarTarefasDoUsuario(usuarioId);
-            }
-        })
-    } else if(booleanPrioridade == true) {
+            .then(function (resp) {
+                if (resp.ok) {
+                    buscarTarefasDoUsuario(usuarioId);
+                }
+            })
+    } else if (booleanPrioridade == true) {
         const request = new Request(url, {
             method: 'PATCH',
             body: JSON.stringify(
@@ -320,51 +320,64 @@ function aoMarcarPrioridade(evento) {
             headers: {
                 "Content-Type": "application/json"
             }
-            
+
         });
 
         fetch(request)
-        .then(function(resp) {
-            if(resp.ok) {
-                buscarTarefasDoUsuario(usuarioId);
+            .then(function (resp) {
+                if (resp.ok) {
+                    buscarTarefasDoUsuario(usuarioId);
+                }
+            })
+    }
+
+
+}
+
+function aoClicarNaTarefa(evento) {
+    const tarefaId = evento.relatedTarget.dataset.tarefa;
+
+    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`;
+
+    fetch(url)
+        .then(function (resp) {
+            if (resp.ok) {
+                resp.json().then(function (respConvertida) {
+                    document.querySelector("#input-editar-tarefa").value = respConvertida.descricao;
+                    document.querySelector("#id-tarefa").value = tarefaId;
+                })
             }
         })
-    }
 
     
 }
 
-function aoClicarNaTarefa(evento) {
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-    let tarefaClicada;
-
-    listaDeTarefas.tarefas.forEach(element => {
-        if (element.id == evento.relatedTarget.dataset.tarefa) {
-            tarefaClicada = element
-        }
-    });
-
-    document.querySelector("#input-editar-tarefa").value = tarefaClicada.descricao;
-    document.querySelector("#id-tarefa").value = tarefaClicada.id;
-}
-
 function aoClicarNoBotaoSalvar() {
     const novaDescricaoTarefa = document.querySelector("#input-editar-tarefa").value;
-    const idTarefa = document.querySelector("#id-tarefa").value;
+    const tarefaId = document.querySelector("#id-tarefa").value;
 
-    const listaDeTarefas = buscarTarefasDoUsuario(usuario);
-    let tarefaClicada;
+    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`
 
-    listaDeTarefas.tarefas.forEach(element => {
-        if (element.id == idTarefa) {
-            tarefaClicada = element
+    const request = new Request(url, {
+        method: 'PATCH',
+        body: JSON.stringify(
+            {
+                descricao: novaDescricaoTarefa
+            }),
+        headers: {
+            "Content-Type": "application/json"
         }
     });
 
-    tarefaClicada.descricao = novaDescricaoTarefa;
-
-    salvarTarefasDoUsuario(usuario, listaDeTarefas);
-    listarTarefasFiltradas();
+    fetch(request)
+        .then(function (resp) {
+            if (resp.ok) {
+                buscarTarefasDoUsuario(usuarioId);
+            }
+        })
+    
+    
+    
 
 }
 
@@ -394,7 +407,7 @@ function listarTarefasFiltradas(tarefas) {
     const hashDaPagina = window.location.hash;
 
     let tarefasFiltradas = [];
-        
+
     if (hashDaPagina == "#todas") {
         tarefas.forEach(element => {
             tarefasFiltradas.push(element);
