@@ -1,0 +1,370 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ToDoList Api",
+        "description": "Essa Api tem como objetivo manipular a organização de tarefas",
+        "contact": {
+            "name": "Vanessa Dias",
+            "url": "https://github.com/VanessaPDias",
+            "email": "vanessapdias@outlook.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Api de teste"
+        }
+    ],
+    "paths": {
+        "/usuarios": {
+            "post": {
+                "summary": "Cadastro de usuário",
+                "description": "Essa rota será responsável por cadastrar um novo usuário",
+                "tags": [
+                    "Usuarios"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "user": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "password": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "name": "João Cardoso",
+                                        "email": "jcardoso@email.com",
+                                        "senha": "123Jc56"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Erros de validação de regras de negocio"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/login": {
+            "post": {
+                "summary": "login de usuário",
+                "description": "Essa rota será responsável por validar os dados para login",
+                "tags": [
+                    "Login"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "login": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "password": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "jcardoso@email.com",
+                                        "senha": "123Jc56"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Usuário ou senha incorretos"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+
+        "/usuarios/{id}": {
+            "get": {
+                "description": "Buscar usuário pelo ID",
+                "summary": "Buscar usuário pelo ID",
+                "tags": [
+                    "Usuarios"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+
+
+        "/usuarios/{usuarioid}/tarefas": {
+            "get": {
+                "description":"Buscar tarefas",
+                "summary": "Busca todas as tarefas do usuário",
+                "tags":["Tarefas"],
+                "parameters": [
+                    {
+                        "name": "usuarioid",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+
+            "post": {
+                "summary": "Criar tarefa",
+                "description": "Essa rota será responsável por uma tarefa",
+                "tags": [
+                    "Tarefas"
+                ],
+                "parameters": [
+                    {
+                        "name": "usuarioid",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "tarefa": {
+                                    "type": "object",
+                                    "properties": {
+                                        "descricao": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "tarefa": {
+                                    "value": {
+                                        "descricao": "Comprar pão"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Erros de validação de regras de negocio"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+
+
+
+        "/usuarios/{usuarioid}/tarefas/{tarefaid}": {
+            "get": {
+                "description": "Buscar tarefa pelo ID",
+                "summary": "Busca a tarefa pelo ID",
+                "tags": [
+                    "Tarefas"
+                ],
+                "parameters": [
+                    {
+                        "name": "usuarioid",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    },
+                    {
+                        "name": "tarefaid",
+                        "in": "path",
+                        "description": "ID da tarefa",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Erros de validação de regras de negocio"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+
+
+            "patch": {
+                "description": "Alterar tarefa",
+                "summary": "Altera os dados da tarefa",
+                "tags": [
+                    "Tarefas"
+                ],
+                "parameters": [
+                    {
+                        "name": "usuarioid",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    },
+                    {
+                        "name": "tarefaid",
+                        "in": "path",
+                        "description": "ID da tarefa",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "tarefa": {
+                                    "type": "object",
+                                    "properties": {
+                                        "descricao": {
+                                            "type": "string"
+                                        },
+                                        "tarefaConcluida": {
+                                            "type": "boolean"
+                                        },
+                                        "tarefaComPrioridade": {
+                                            "type": "bollean"
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "tarefa": {
+                                    "value": {
+                                        "descricao": "Comprar pão",
+                                        "tarefaConcluida": true,
+                                        "tarefaComPrioridade": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Erros de validação de regras de negocio"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+
+            "delete": {
+                "description": "Excluir tarefa",
+                "summary": "Exclui atarefa",
+                "tags": [
+                    "Tarefas"
+                ],
+                "parameters": [
+                    {
+                        "name": "usuarioid",
+                        "in": "path",
+                        "description": "ID do usuário",
+                        "required": true
+                    },
+                    {
+                        "name": "tarefaid",
+                        "in": "path",
+                        "description": "ID da tarefa",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Erros de validação de regras de negocio"
+                    },
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

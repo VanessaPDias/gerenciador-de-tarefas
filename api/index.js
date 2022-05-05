@@ -10,7 +10,6 @@ const loginController = require('./controllers/loginController');
 const tarefasController = require('./controllers/tarefasController');
 
 
-
 //definição de rota
 servidor.app.post('/usuarios', usuariosController.criarUsuario);
 servidor.app.post('/login', loginController.login);
