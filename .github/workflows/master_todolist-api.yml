@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: ./api
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,4 +53,4 @@ jobs:
           app-name: 'todolist-api'          
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BCE497A252F24720B6E4AD3145A886A3 }}          
-          package: .
+          package: ./api
