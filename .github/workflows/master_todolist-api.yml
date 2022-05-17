@@ -22,7 +22,7 @@ jobs:
           node-version: '16.x'
 
       - name: Enter Api Folder
-        run: cd api
+        run: dir
 
       - name: npm install, build, and test
         run: |
