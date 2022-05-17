@@ -26,7 +26,7 @@ jobs:
         with:
           files: 'api/swagger.json'
         env:
-          openapi: "4.0.0"
+          servers.0.url: "https://todolist-api.azurewebsites.net/"
 
       - name: npm install, build, and test
         run: |
