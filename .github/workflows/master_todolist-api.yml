@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: '16.x'
 
+      - name: Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'api/swagger.json'
+        env:
+          servers.0.url: "https://todolist-api.azurewebsites.net/"
+
       - name: npm install, build, and test
         run: |
           cd api
