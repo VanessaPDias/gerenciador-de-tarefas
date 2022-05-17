@@ -30,7 +30,7 @@ function aoCadastrarUsuario(evento) {
     };
 
     //endpoint
-    const url = 'http://localhost:3000/usuarios';
+    const url = `${config.urlDaApi}/usuarios`;
 
     //construtor do objeto Request - cria a requisição para o servidor
     const request = new Request(url, {

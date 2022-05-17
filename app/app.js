@@ -16,7 +16,7 @@ function recuperarUsuarioLogado() {
 }
 
 function buscarUsuario(usuarioEncontrado) {
-    const url = `http://localhost:3000/usuarios/${usuarioEncontrado.usuarioId}`;
+    const url = `${config.urlDaApi}/usuarios/${usuarioEncontrado.usuarioId}`;
 
     fetch(url)
         .then(function (resp) {
@@ -77,7 +77,7 @@ function imprimirNomeDoUsuario(usuario) {
 
 
 function buscarTarefasDoUsuario(usuarioId) {
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas`;
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas`;
 
     fetch(url)
         .then(function (resp) {
@@ -103,7 +103,7 @@ function aoClicarNoBotaoCriarTarefa(evento) {
     document.querySelector("#input-tarefa").value = "";
 
     //endpoint
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas`;
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas`;
 
     //construtor do objeto Request - cria a requisição para o servidor
     const request = new Request(url, {
@@ -204,7 +204,7 @@ function aoMarcarTarefa(evento) {
     const tarefaId = evento.target.dataset.tarefa;
     const checkbox = evento.target.checked;
 
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas/${tarefaId}`
 
     if (checkbox == true) {
         const request = new Request(url, {
@@ -260,7 +260,7 @@ function adicionarEventoExcluir() {
 function aoExcluirTarefa(evento) {
     const tarefaId = evento.target.dataset.tarefa;
 
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`;
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas/${tarefaId}`;
 
     const request = new Request(url, {
         method: 'DELETE',
@@ -290,7 +290,7 @@ function aoMarcarPrioridade(evento) {
 
     const booleanPrioridade = (prioridade == "true");
 
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas/${tarefaId}`
 
     if (!booleanPrioridade) {
         const request = new Request(url, {
@@ -337,7 +337,7 @@ function aoMarcarPrioridade(evento) {
 function aoClicarNaTarefa(evento) {
     const tarefaId = evento.relatedTarget.dataset.tarefa;
 
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`;
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas/${tarefaId}`;
 
     fetch(url)
         .then(function (resp) {
@@ -356,7 +356,7 @@ function aoClicarNoBotaoSalvar() {
     const novaDescricaoTarefa = document.querySelector("#input-editar-tarefa").value;
     const tarefaId = document.querySelector("#id-tarefa").value;
 
-    const url = `http://localhost:3000/usuarios/${usuarioId}/tarefas/${tarefaId}`
+    const url = `${config.urlDaApi}/usuarios/${usuarioId}/tarefas/${tarefaId}`
 
     const request = new Request(url, {
         method: 'PATCH',

@@ -20,7 +20,7 @@ function validarUsuario(evento) {
 
 
     //endpoint
-    const url = 'http://localhost:3000/login';
+    const url = `${config.urlDaApi}/login`;
 
     //construtor do objeto Request - cria a requisição para o servidor
     const request = new Request(url, {
