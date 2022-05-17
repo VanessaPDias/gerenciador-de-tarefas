@@ -11,7 +11,7 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDoc = require('./swagger.json');
 
-const port = 3000;
+const port = 443;
 
 //inicia o servidor
 app.listen(port, () => {
