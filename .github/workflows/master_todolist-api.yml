@@ -26,7 +26,7 @@ jobs:
         with:
           files: 'api/swagger.json'
         env:
-          servers[0].url: "sampleValue"
+          openapi: "4.0.0"
 
       - name: npm install, build, and test
         run: |
