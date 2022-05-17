@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: '16.x'
 
+      - name: Enter Api Folder
+        run: cd api
+
       - name: npm install, build, and test
         run: |
           npm install
@@ -53,4 +56,4 @@ jobs:
           app-name: 'todolist-api'          
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BCE497A252F24720B6E4AD3145A886A3 }}          
-          package: api
+          package: .
