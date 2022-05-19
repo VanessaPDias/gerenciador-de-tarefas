@@ -92,11 +92,6 @@ function buscarTarefasDoUsuario(usuarioId) {
 
 }
 
-function salvarTarefasDoUsuario(usuario, listaDeTarefas) {
-    const chave = usuario.email + "_tarefas";
-    localStorage.setItem(chave, JSON.stringify(listaDeTarefas));
-}
-
 function aoClicarNoBotaoCriarTarefa(evento) {
     const descricaoDaTarefa = document.querySelector("#input-tarefa").value;
 
@@ -136,9 +131,6 @@ function aoClicarNoBotaoCriarTarefa(evento) {
         })
 
 }
-
-
-
 
 function imprimirListaDeTarefas(listaDeTarefas) {
 
