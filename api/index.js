@@ -1,10 +1,6 @@
 
 const servidor = require('./servidor');
 
-
-
-const dados = require('./dados');
-
 const usuariosController = require('./controllers/usuariosController');
 
 const loginController = require('./controllers/loginController');

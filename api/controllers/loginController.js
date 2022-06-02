@@ -1,19 +1,12 @@
 
-const mySql = require('mysql2');
+const bancoDeDados = require("../conexao");
 
 
 function login(req, res) {
     const email = req.body.email;
     const senha = req.body.senha;
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
-
-    conexao.connect();
+    const conexao = bancoDeDados.abrirConexao();
 
 
     conexao.query(`select UsuarioId from usuarios where email = '${email}' and senha = '${senha}'`, function (error, results, fields) {

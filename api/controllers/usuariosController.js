@@ -1,5 +1,5 @@
 
-const mySql = require('mysql2');
+const bancoDeDados = require("../conexao");
 
 //geração de identificadores unicos
 const crypto = require('crypto');
@@ -19,14 +19,7 @@ function criarUsuario(req, res) {
     }
 
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
-
-    conexao.connect();
+    const conexao = bancoDeDados.abrirConexao();
 
     conexao.query(`select UsuarioId from usuarios where email = '${novoUsuario.email}'`, function (error, results, fields) {
         if(error) {
@@ -60,14 +53,7 @@ function criarUsuario(req, res) {
 function buscarUsuario(req, res) {
     const id = req.params.id;
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
-
-    conexao.connect();
+    const conexao = bancoDeDados.abrirConexao();
 
     conexao.query(`select U.UsuarioId, U.Nome, U.Email, T.TarefaId, T.Descricao, T.Concluida, T.Prioridade from usuarios U left join tarefas T on U.usuarioId = T.usuarioId where  U.usuarioId = '${id}'`, function (error, results, fields) {
         if(error) {

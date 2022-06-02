@@ -1,5 +1,5 @@
-const mySql = require('mySql2');
-const dados = require("../dados")
+
+const bancoDeDados = require("../conexao");
 
 const crypto = require('crypto');
 const { transcode } = require('buffer');
@@ -7,16 +7,9 @@ const { transcode } = require('buffer');
 function buscarTarefas(req, res) {
     const id = req.params.usuarioid;
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
+    const conexao = bancoDeDados.abrirConexao();
 
-    conexao.connect();
-
-    conexao.query(`select UsuarioId, TarefaId, Descricao, Concluida, Prioridade from tarefas where UsuarioId = ${id} and Excluida = false`, function (error, results, fields) {
+    conexao.query(`select UsuarioId, TarefaId, Descricao, Concluida, Prioridade from tarefas where UsuarioId = '${id}' and Excluida = false`, function (error, results, fields) {
         if (error) {
             res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
             console.log(error);
@@ -41,16 +34,9 @@ function buscarTarefaPorId(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
+    const conexao = bancoDeDados.abrirConexao();
 
-    conexao.connect();
-
-    conexao.query(`Select Descricao from tarefas where UsuarioId = ${usuarioId} and TarefaId = '${tarefaId}' and Excluida = false`, function (error, results, fields) {
+    conexao.query(`Select Descricao from tarefas where UsuarioId = '${usuarioId}' and TarefaId = '${tarefaId}' and Excluida = false`, function (error, results, fields) {
 
         if (error) {
             res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
@@ -88,14 +74,7 @@ function criarTarefa(req, res) {
         return;
     }
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
-
-    conexao.connect();
+    const conexao = bancoDeDados.abrirConexao();
 
     conexao.query(`select UsuarioId from usuarios where UsuarioId = '${usuarioId}'`, function (error, results, fields) {
         if (error) {
@@ -130,14 +109,7 @@ function alterarTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
-
-    conexao.connect();
+    const conexao = bancoDeDados.abrirConexao();
 
     conexao.query(`select UsuarioId from usuarios where UsuarioId = '${usuarioId}'`, function (error, results, fields) {
         if (error) {
@@ -204,14 +176,7 @@ function excluirTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
-    const conexao = mySql.createConnection({
-        host: '127.0.0.1',
-        user: 'root',
-        password: 'admin',
-        database: 'todolist'
-    });
-
-    conexao.connect();
+    const conexao = bancoDeDados.abrirConexao();
 
     conexao.query(`select UsuarioId from usuarios where UsuarioId = '${usuarioId}'`, function (error, results, fields) {
         if (error) {
