@@ -1,36 +1,74 @@
-const dados = require('../dados');
+const mySql = require('mySql2');
+const dados = require("../dados")
 
 const crypto = require('crypto');
+const { transcode } = require('buffer');
 
 function buscarTarefas(req, res) {
     const id = req.params.usuarioid;
-    let usuarioEncontrado = dados.usuarios.find(usuario => usuario.id == id);
 
-    if (!usuarioEncontrado) {
-        res.status(404).send({ erro: "Usuário não encontrado" });
-        return;
-    }
+    const conexao = mySql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'admin',
+        database: 'todolist'
+    });
 
-    res.send({ tarefas: usuarioEncontrado.listaDeTarefas });
+    conexao.connect();
+
+    conexao.query(`select UsuarioId, TarefaId, Descricao, Concluida, Prioridade from tarefas where UsuarioId = ${id} and Excluida = false`, function (error, results, fields) {
+        if (error) {
+            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+            console.log(error);
+            return;
+        }
+
+        const usuarioEncontrado = results;
+
+        if (!usuarioEncontrado) {
+            res.status(404).send({ erro: "Usuário não encontrado" });
+            return;
+        }
+
+
+        res.send({ tarefas: usuarioEncontrado });
+    })
+
 }
 
-function buscarTarefaComId(req, res) {
+
+function buscarTarefaPorId(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
-    let usuarioEncontrado = dados.usuarios.find(usuario => usuario.id == usuarioId);
-    if (!usuarioEncontrado) {
-        res.status(404).send({ erro: "Usuário não encontrado." });
-        return;
-    }
+    const conexao = mySql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'admin',
+        database: 'todolist'
+    });
 
-    let tarefaEncontrada = usuarioEncontrado.listaDeTarefas.find(tarefa => tarefa.tarefaId == tarefaId);
-    if (!tarefaEncontrada) {
-        res.status(404).send({ erro: "Tarefa não encontrada." });
-        return;
-    }
+    conexao.connect();
 
-    res.send({ descricao: tarefaEncontrada.descricao });
+    conexao.query(`Select Descricao from tarefas where UsuarioId = ${usuarioId} and TarefaId = '${tarefaId}' and Excluida = false`, function (error, results, fields) {
+
+        if (error) {
+            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+            console.log(error);
+            return;
+        }
+
+        const tarefaEncontrada = results[0];
+
+        if (!tarefaEncontrada) {
+            res.status(404).send({ erro: "Tarefa não encontrada" });
+            return;
+        }
+
+        res.send({ descricao: tarefaEncontrada.Descricao });
+    })
+
+
 }
 
 
@@ -50,14 +88,41 @@ function criarTarefa(req, res) {
         return;
     }
 
-    const usuarioEncontrado = dados.usuarios.find(usuario => usuarioId == usuario.id);
+    const conexao = mySql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'admin',
+        database: 'todolist'
+    });
 
-    if (!usuarioEncontrado) {
-        res.status(404).send({ erro: "Usuário não encontrado" });
-    } else {
-        usuarioEncontrado.listaDeTarefas.push(novaTarefa);
-        res.send({tarefaId: novaTarefa.tarefaId})
-    }
+    conexao.connect();
+
+    conexao.query(`select UsuarioId from usuarios where UsuarioId = '${usuarioId}'`, function (error, results, fields) {
+        if (error) {
+            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+            console.log(error);
+            return;
+        }
+
+        const usuarioEncontrado = results[0];
+
+        if (usuarioEncontrado) {
+            conexao.query(`insert into tarefas (UsuarioId, TarefaId, Descricao, Concluida, Prioridade, Excluida) 
+            values ('${usuarioEncontrado.UsuarioId}', '${novaTarefa.tarefaId}', '${novaTarefa.descricao}', ${novaTarefa.tarefaConcluida}, ${novaTarefa.tarefaComPrioridade}, false)`, function (error, results, fields) {
+                if (error) {
+                    res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+                    console.log(error);
+                    return;
+                }
+                res.send({ tarefaId: novaTarefa.tarefaId })
+            })
+
+
+        } else {
+            res.status(404).send({ erro: "Usuário não encontrado" });
+
+        }
+    })
 
 }
 
@@ -65,66 +130,140 @@ function alterarTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
-    let usuarioEncontrado = dados.usuarios.find(usuario => usuario.id == usuarioId);
+    const conexao = mySql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'admin',
+        database: 'todolist'
+    });
 
-    if (!usuarioEncontrado) {
-        res.status(404).send({ erro: "Usuário não encontrado." });
-        return;
-    }
+    conexao.connect();
 
-    let tarefaEncontrada = usuarioEncontrado.listaDeTarefas.find(tarefa => tarefa.tarefaId == tarefaId);
+    conexao.query(`select UsuarioId from usuarios where UsuarioId = '${usuarioId}'`, function (error, results, fields) {
+        if (error) {
+            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+            console.log(error);
+            return;
+        }
 
-    if (!tarefaEncontrada) {
-        res.status(404).send({ erro: "Tarefa não encontrada." });
-        return;
-    }
+        const usuarioEncontrado = results[0];
 
-    const descricaoDaTarefa = req.body.descricao;
-    const tarefaConcluida = req.body.tarefaConcluida;
-    const tarefaComPrioridade = req.body.tarefaComPrioridade;
+        if (usuarioEncontrado) {
+            conexao.query(`select tarefaId, Descricao, Concluida, Prioridade from tarefas where TarefaId = '${tarefaId}' and Excluida = false`, function (error, results, fields) {
+                if (error) {
+                    res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+                    console.log(error);
+                    return;
+                }
 
-    if(descricaoDaTarefa != undefined && descricaoDaTarefa != null && descricaoDaTarefa != "") {
-        tarefaEncontrada.descricao = descricaoDaTarefa;
-    }
+                const tarefaEncontrada = results[0];
 
-    if(typeof(tarefaConcluida) == 'boolean') {
-        tarefaEncontrada.tarefaConcluida = tarefaConcluida;
-    }
+                if (tarefaEncontrada) {
+                    const descricaoDaTarefa = req.body.descricao;
+                    const tarefaConcluida = req.body.tarefaConcluida;
+                    const tarefaComPrioridade = req.body.tarefaComPrioridade;
 
-    
-    if(typeof(tarefaComPrioridade) == 'boolean') {
-        tarefaEncontrada.tarefaComPrioridade = tarefaComPrioridade;
-    }
+                    if (descricaoDaTarefa != undefined && descricaoDaTarefa != null && descricaoDaTarefa != "") {
+                        tarefaEncontrada.Descricao = descricaoDaTarefa;
+                    }
 
-    res.send();
+                    if (typeof (tarefaConcluida) == 'boolean') {
+                        tarefaEncontrada.Concluida = tarefaConcluida;
+                    }
+
+                    if (typeof (tarefaComPrioridade) == 'boolean') {
+                        tarefaEncontrada.Prioridade = tarefaComPrioridade;
+                    }
+
+                    conexao.query(`update tarefas set Descricao = '${tarefaEncontrada.Descricao}', Concluida = ${tarefaEncontrada.Concluida}, Prioridade = ${tarefaEncontrada.Prioridade} where TarefaId = '${tarefaId}'`, function (error, results, filds) {
+                        if (error) {
+                            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+                            console.log(error);
+                            return;
+                        }
+
+                        res.send();
+                    })
+                } else {
+                    res.status(404).send({ erro: "Tarefa não encontrada" });
+                }
+
+            })
+
+
+        } else {
+            res.status(404).send({ erro: "Usuário não encontrado" });
+
+        }
+    })
+
+
 }
 
 function excluirTarefa(req, res) {
     const usuarioId = req.params.usuarioid;
     const tarefaId = req.params.tarefaid;
 
-    let usuarioEncontrado = dados.usuarios.find(usuario => usuario.id == usuarioId);
-    let tarefaEncontrada = usuarioEncontrado.listaDeTarefas.find(tarefa => tarefa.tarefaId == tarefaId);
+    const conexao = mySql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'admin',
+        database: 'todolist'
+    });
 
-    if (!usuarioEncontrado) {
-        res.status(404).send({ erro: "Usuário não encontrado." });
-        return;
-    }
+    conexao.connect();
 
-    if (!tarefaEncontrada) {
-        res.status(404).send({ erro: "Tarefa não encontrada." });
-        return;
-    }
+    conexao.query(`select UsuarioId from usuarios where UsuarioId = '${usuarioId}'`, function (error, results, fields) {
+        if (error) {
+            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+            console.log(error);
+            return;
+        }
 
-    usuarioEncontrado.listaDeTarefas = usuarioEncontrado.listaDeTarefas.filter(tarefa => tarefa.tarefaId != tarefaId);
+        const usuarioEncontrado = results[0];
 
-    res.send();
+        if (usuarioEncontrado) {
+            conexao.query(`select tarefaId from tarefas where TarefaId = '${tarefaId}'`, function (error, results, fields) {
+                if (error) {
+                    res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+                    console.log(error);
+                    return;
+                }
+
+                const tarefaEncontrada = results[0];
+
+                if (tarefaEncontrada) {
+                    conexao.query(`update tarefas set Excluida = true`, function (error, results, filds) {
+                        if (error) {
+                            res.status(500).send({ erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde." });
+                            console.log(error);
+                            return;
+                        }
+
+                        res.send();
+                    })
+                } else {
+                    res.status(404).send({ erro: "Tarefa não encontrada" });
+                }
+
+            })
+
+
+        } else {
+            res.status(404).send({ erro: "Usuário não encontrado" });
+
+        }
+    })
+
+
 }
 
+
+
 module.exports = {
-   buscarTarefas: buscarTarefas,
-   buscarTarefaComId: buscarTarefaComId,
-   criarTarefa: criarTarefa,
-   alterarTarefa: alterarTarefa,
-   excluirTarefa: excluirTarefa
+    buscarTarefas: buscarTarefas,
+    buscarTarefaComId: buscarTarefaPorId,
+    criarTarefa: criarTarefa,
+    alterarTarefa: alterarTarefa,
+    excluirTarefa: excluirTarefa
 }

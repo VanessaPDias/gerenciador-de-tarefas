@@ -29,13 +29,19 @@ function criarUsuario(req, res) {
     conexao.connect();
 
     conexao.query(`select UsuarioId from usuarios where email = '${novoUsuario.email}'`, function (error, results, fields) {
+        if(error) {
+            res.status(500).send({erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde."});
+            console.log(error);
+            return;
+        }
         const usuarioEncontrado = results[0];
 
         if (!usuarioEncontrado) {
             conexao.query(`insert into usuarios (UsuarioId, Nome, Email, Senha) 
             values ('${novoUsuario.id}', '${novoUsuario.nome}', '${novoUsuario.email}', '${novoUsuario.senha}')`, function (error, results, fields) {
                 if(error) {
-                    res.status(500).send({erro: "Houve um erro interno ao tentar execultar a sua operação. Tente mais tarde."});
+                    res.status(500).send({erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde."});
+                    console.log(error);
                     return;
                 }
                
@@ -63,19 +69,40 @@ function buscarUsuario(req, res) {
 
     conexao.connect();
 
-    conexao.query(`select * from usuarios where UsuarioId = ${id}`, function (error, results, fields) {
+    conexao.query(`select U.UsuarioId, U.Nome, U.Email, T.TarefaId, T.Descricao, T.Concluida, T.Prioridade from usuarios U left join tarefas T on U.usuarioId = T.usuarioId where  U.usuarioId = '${id}'`, function (error, results, fields) {
+        if(error) {
+            res.status(500).send({erro: "Houve um erro interno ao tentar executar a sua operação. Tente mais tarde."});
+            console.log(error);
+            return;
+        }
+
         const usuarioEncontrado = results[0];
 
         if (!usuarioEncontrado) {
             res.status(404).send({ erro: "Usuário não encontrado" });
             return;
         }
+
+        const tarefas = [];
+
+        results.forEach(item => {
+            if(!item.TarefaId) {
+                return;
+            }
+
+            tarefas.push({
+                tarefaId: item.TarefaId,
+                descricao: item.Descricao,
+                tarefaConcluida: item.Concluida,
+                tarefaComPrioridade: item.Prioridade
+            })
+        })
     
         res.send({
             id: usuarioEncontrado.UsuarioId,
             nome: usuarioEncontrado.Nome,
             email: usuarioEncontrado.Email,
-            //tarefas: usuarioEncontrado.listaDeTarefas
+            tarefas: tarefas
         });
     })
 
